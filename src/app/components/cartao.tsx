@@ -8,7 +8,7 @@ interface CardProps {
   descriptionColor?: string; // cor personalizada do texto
 }
 
-export default function Card({
+export default function Cartao({
   title,
   description,
   imageSrc,

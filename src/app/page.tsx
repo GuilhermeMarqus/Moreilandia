@@ -3,6 +3,7 @@ import Navbar from "./components/navbar";
 import Image from "next/image";
 
 import Title from "./components/text";
+import Cartao from "./components/cartao";
 
 import {
   Dialog,
@@ -20,21 +21,41 @@ export default function Home() {
       <Navbar />
 
       {/* Banner Principal - Tela Cheia */}
-      <section className="relative z-10 min-h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="relative z-10 min-h-screen w-full flex">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/Banner_Moreilandia.png"
-            alt="Banner Apicultura Moreilândia"
-            fill
-            priority
-            className="object-cover w-full h-full object-center"
-          />
+        <div className="flex">
+          <div className="absolute inset-0">
+            <Image
+              src="/Banner Apicultura.png"
+              alt="Banner Apicultura Moreilândia"
+              fill
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="w-full h-full flex items-end pl-50">
+            <Image
+              src="/Apicultor png.png"
+              alt="Apicultor"
+              height={280}
+              width={500}
+              className="absolute items-top"
+            />
+          </div>
+          {/** Imagem da logomarga do banner **/}
+          <div className="flex justify-center items-center w-full h-full">
+            <Image
+              src="/LOGO COM NOME.png"
+              alt="Logo com nome"
+              height={700}
+              width={700}
+              className="ml-350 mb-50 absolute flex items-center"
+            />
+          </div>
         </div>
 
         {/* Lado Direito - Conteúdo e Botão */}
-        <div className="flex flex-col items-center lg:items-end gap-6 pt-100 ml-260">
-          <div className="bg-white/80 backdrop-blur-xs p-6 rounded-2xl shadow-xl max-w-lg text-center lg:text-left">
+        <div className="absolute left-180 top-100 items-center justify-center w-full h-full mb-50 lg:items-end">
+          <div className="bg-white/80 backdrop-blur-xs p-6 rounded-2xl shadow-xl max-w-lg text-center lg:text-left w-120 h-60">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               Conheça, Apoie e Descubra a Cultura do Mel na Região
             </h2>
@@ -50,72 +71,44 @@ export default function Home() {
       </section>
       <main className="bg-[#F6A721] rounded-2xl w-full h-[880] flex flex-col items-center">
         <div className="p-6">
-          <Title before={"Sobre a"} highlight={"cultura"} after={"do mel"} />
-        </div>
-        <div className="flex flex-col items-center justify-between">
-          <div className=" w-full h-full flex items-center justify-center gap-20 p-12">
-            <Card className="bg-transparent border-none shadow-none p-6 flex flex-col justify-between">
-              <CardHeader className="p-0 mb-4">
-                <CardTitle className="flex items-center text-xl font-bold text-[#FAFBFB]">
-                  <span className="w-3 h-3 bg-[#0B97E4] mr-3"></span>{" "}
-                  Como surgiu
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <p className="text-gray-700 mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-transparent border-none shadow-none p-6 flex flex-col justify-between">
-              <CardHeader className="p-0 mb-4">
-                <CardTitle className="flex items-center text-xl font-bold text-[#FAFBFB]">
-                  <span className="w-3 h-3 bg-[#0B97E4] mr-3"></span>{" "}
-                  Comércio local
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <p className="text-gray-700 mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-transparent border-none shadow-none p-6 flex flex-col justify-between">
-              <CardHeader className="p-0 mb-4">
-                <CardTitle className="flex items-center text-xl font-bold text-[#FAFBFB]">
-                  <span className=" rounded-full w-3 h-3 bg-[#0B97E4] mr-3"></span>{" "}
-                  Quando começou
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <p className="text-[#742406] mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
-                </p>
-              </CardContent>
-            </Card>
+          <Title 
+            before={"Sobre a"}
+            highlight={"cultura"}
+            after={"do mel"} 
+            yellow={""}          />
           </div>
-          <div className="pt-25">
-            <Button className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6">
-              Veja Mais
-            </Button>
+          <div className="flex flex-col items-center justify-between">
+          <div className="flex items-center gap-40">
+            <Cartao 
+            title={"Lorem ips un dolor"} 
+            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
+            titleColor="#fafbfb" 
+            descriptionColor="742406"/>
+            <Cartao 
+            title={"Lorem ips un dolor"} 
+            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
+            titleColor="#fafbfb" 
+            descriptionColor="742406"/>
+            <Cartao 
+            title={"Lorem ips un dolor"} 
+            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
+            titleColor="#fafbfb" 
+            descriptionColor="#742406"/>
           </div>
-        </div>
+          <div className="pt-35">
+          <Button className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6">Veja Mais</Button>
+          </div>
+          </div>
       </main>
-      <div className="w-full h-full bg-[#FFFFFF] py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-extrabold text-[#742406] mb-12 text-center">
-            Benefícios <span className="text-[#f6a51e]">do Mel</span>
-          </h2>
-          <div className="flex grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="w-full h-full bg-[#FFFFFF]">
+        <div className="container mx-auto p-6">
+          <Title 
+          before={""} 
+          highlight={"Beneficios do"} 
+          after={""}
+          yellow={"mel"}
+          />
+          <div className="flex grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-6 gap-8">
             <Card className="border-[#f6a51e] shadow-lg rounded-2xl p-6 flex flex-col justify-between">
               <CardHeader className="p-0 mb-4">
                 <CardTitle className="flex items-center text-xl font-bold text-[#f6a51e]">
