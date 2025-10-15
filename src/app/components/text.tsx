@@ -7,7 +7,7 @@ interface TitleHighlightProps {
 
 export default function Title({ before, highlight, after, yellow }: TitleHighlightProps) {
   return (
-    <div className="py-2 px-4 text-center">
+    <div className="py-2 px-4">
       <h1 className="text-[60px] font-extrabold">
         <span className="text-white">{before} </span>
         <span className="text-[#783000]">{highlight}</span>

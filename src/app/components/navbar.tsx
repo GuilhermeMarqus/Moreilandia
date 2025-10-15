@@ -17,7 +17,7 @@ export default function Navbar() {
         />
 
         <div className="flex gap-18 text-black font-medium">
-          <Link href="#historia" className="hover:text-amber-600 transition">
+          <Link href="/historia" className="hover:text-amber-600 transition">
             História
           </Link>
           <Link href="#beneficios" className="hover:text-amber-600 transition">
