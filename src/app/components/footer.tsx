@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#007bff] text-white py-12 px-4 md:px-8 lg:px-16 mt-16">
+    <footer className="bg-[#007bff] text-white p-6 md:px-8 lg:px-16">
       <div className="container mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10">
         {/* Colmeia e Copyright */}
         <div className="flex flex-col items-center">
@@ -17,7 +17,7 @@ export default function Footer() {
         </div>
 
         {/* Seções de Navegação */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-16 flex-grow">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:gap-16 flex-grow m-6">
           {/* História */}
           <div>
             <h3 className="font-bold text-xl mb-4">História</h3>
@@ -92,11 +92,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center justify-center">
-          <p className="text-sm text-center mt-10">
-            © 2025 Apicultura Moreilândia - Todos os direitos reservados
-          </p>
-          </div>
+      <div className="flex w-full h-full justify-center align-bottom">
+        <p className="text-sm text-center">
+          © 2025 Apicultura Moreilândia - Todos os direitos reservados
+        </p>
+      </div>
     </footer>
   );
 }

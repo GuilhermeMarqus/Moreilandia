@@ -13,7 +13,7 @@ export default function Cartao({
   description,
   imageSrc,
   titleColor = "#783000",       // cor padrão (marrom)
-  descriptionColor = "#5b2c00", // cor padrão (marrom escuro)
+  descriptionColor = "#742406", // cor padrão (marrom escuro)
 }: CardProps) {
   return (
     <div className="max-w-xs rounded-2xl p-5 text-center">
@@ -26,7 +26,7 @@ export default function Cartao({
           className="opacity-70"
         />
       </div>
-      <h2 className="text-[20px] font-bold mb-2" style={{ color: titleColor }}>
+      <h2 className="text-[20px] font-bold mb-2 text" style={{ color: titleColor }}>
         {title}
       </h2>
       <p className="text-[17px]" style={{ color: descriptionColor }}>

@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
-import Navbar from "./components/navbar";
+"use client";
+
+import Navbar from "@/app/components/navbar";
 import Image from "next/image";
 
 import Title from "./components/text";
@@ -14,14 +15,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { MoveDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-
       {/* Banner Principal - Tela Cheia */}
-      <section className="relative z-10 min-h-screen w-full flex">
+      <section id="home" className="relative z-10 min-h-screen w-full flex">
         {/* Background Image */}
         <div className="flex">
           <div className="absolute inset-0">
@@ -54,59 +59,82 @@ export default function Home() {
         </div>
 
         {/* Lado Direito - Conteúdo e Botão */}
-        <div className="absolute left-180 top-100 items-center justify-center w-full h-full mb-50 lg:items-end">
-          <div className="bg-white/80 backdrop-blur-xs p-6 rounded-2xl shadow-xl max-w-lg text-center lg:text-left w-120 h-60">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Conheça, Apoie e Descubra a Cultura do Mel na Região
-            </h2>
-            <p className="text-gray-600 mb-6 text-lg">
-              Descubra os segredos da apicultura tradicional e os benefícios
-              únicos do mel de Moreilandia.
-            </p>
-            <Button className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-8 py-3 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105">
+        <div className="absolute inset-0 flex items-end justify-center px-40 py-20 lg:justify-end lg:pl-32">
+  <div className="bg-[#FAFBFB]/90 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl max-w-lg text-center lg:text-left">
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+      Conheça, Apoie e Descubra a Cultura do Mel na Região
+    </h2>
+
+    <p className="text-gray-600 mb-6 text-base md:text-lg">
+      Descubra os segredos da apicultura tradicional e os benefícios
+      únicos do mel de Moreilândia.
+    </p>
+
+    <Button
+      className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-6 md:px-8 py-3 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+      onClick={() => router.push('#cultura-do-mel')}
+    >
+      Veja mais
+      <MoveDown className="ml-2 text-lg" />
+    </Button>
+  </div>
+</div>
+      </section>
+      <main
+        id="cultura-do-mel"
+        className="bg-[#F6A721] rounded-2xl w-full h-220 flex flex-col items-center"
+      >
+        <div className="p-6">
+          <Title
+            before={"Sobre a"}
+            highlight={"cultura"}
+            after={"do mel"}
+            yellow={""}
+          />
+        </div>
+        <div className="flex flex-col items-center justify-between">
+          <div className="flex items-center gap-40">
+            <Cartao
+              title={"Lorem ips un dolor"}
+              description={
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              }
+              titleColor="#fafbfb"
+              descriptionColor="#742406"
+            />
+            <Cartao
+              title={"Lorem ips un dolor"}
+              description={
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              }
+              titleColor="#fafbfb"
+              descriptionColor="#742406"
+            />
+            <Cartao
+              title={"Lorem ips un dolor"}
+              description={
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              }
+              titleColor="#fafbfb"
+              descriptionColor="#742406"
+            />
+          </div>
+          <div className="pt-35">
+            <Button className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6"
+            onClick={() => router.push("./historia")}
+            >
               Veja Mais
             </Button>
           </div>
         </div>
-      </section>
-      <main className="bg-[#F6A721] rounded-2xl w-full h-[880] flex flex-col items-center">
-        <div className="p-6">
-          <Title 
-            before={"Sobre a"}
-            highlight={"cultura"}
-            after={"do mel"} 
-            yellow={""}          />
-          </div>
-          <div className="flex flex-col items-center justify-between">
-          <div className="flex items-center gap-40">
-            <Cartao 
-            title={"Lorem ips un dolor"} 
-            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
-            titleColor="#fafbfb" 
-            descriptionColor="#742406"/>
-            <Cartao 
-            title={"Lorem ips un dolor"} 
-            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
-            titleColor="#fafbfb" 
-            descriptionColor="#742406"/>
-            <Cartao 
-            title={"Lorem ips un dolor"} 
-            description={"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."} 
-            titleColor="#fafbfb" 
-            descriptionColor="#742406"/>
-          </div>
-          <div className="pt-35">
-          <Button className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6">Veja Mais</Button>
-          </div>
-          </div>
       </main>
-      <div className="w-full h-full bg-[#FFFFFF]">
+      <div id="beneficios" className="w-full h-full bg-[#FFFFFF]">
         <div className="container mx-auto p-6">
-          <Title 
-          before={""} 
-          highlight={"Beneficios do"} 
-          after={""}
-          yellow={"mel"}
+          <Title
+            before={""}
+            highlight={"Beneficios do"}
+            after={""}
+            yellow={"mel"}
           />
           <div className="flex grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-6 gap-8">
             <Card className="border-[#f6a51e] shadow-lg rounded-2xl p-6 flex flex-col justify-between">
@@ -152,7 +180,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <p className="text-gray-700 mb-4 flex-grow">
+                <p className="text-[#742406] mb-4 flex-grow">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been the industry's
                   standard dummy text ever since the 1500s, when an unknown
@@ -167,7 +195,7 @@ export default function Home() {
                       <DialogTitle className="text-[#742406]">
                         O Sabor Único do Mel de Moreilandia
                       </DialogTitle>
-                      <DialogDescription className="text-gray-700">
+                      <DialogDescription className="text-[#742406]">
                         Aqui está o conteúdo expandido sobre o sabor único do
                         mel de Moreilandia. Explore as notas de floração, a
                         doçura e as características regionais que tornam este
@@ -187,7 +215,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <p className="text-gray-700 mb-4 flex-grow">
+                <p className="text-[#742406] mb-4 flex-grow">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been the industry's
                   standard dummy text ever since the 1500s, when an unknown
@@ -202,7 +230,7 @@ export default function Home() {
                       <DialogTitle className="text-[#742406]">
                         A Rica Flora de Moreilandia
                       </DialogTitle>
-                      <DialogDescription className="text-gray-700">
+                      <DialogDescription className="text-[#742406]">
                         Conteúdo expandido sobre a rica flora de Moreilandia que
                         contribui para a qualidade do mel. Detalhes sobre as
                         flores e plantas nativas que as abelhas visitam.
@@ -221,7 +249,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <p className="text-gray-700 mb-4 flex-grow">
+                <p className="text-[#742406] mb-4 flex-grow">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been the industry's
                   standard dummy text ever since the 1500s, when an unknown
@@ -236,7 +264,7 @@ export default function Home() {
                       <DialogTitle className="text-[#742406]">
                         A Fauna e a Apicultura em Moreilandia
                       </DialogTitle>
-                      <DialogDescription className="text-gray-700">
+                      <DialogDescription className="text-[#742406]">
                         Informações expandidas sobre a fauna local e seu papel
                         no ecossistema da apicultura em Moreilandia. A
                         importância das abelhas e outros polinizadores.

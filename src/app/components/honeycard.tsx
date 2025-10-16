@@ -9,8 +9,8 @@ export default function HoneyCard({ imageSrc, text }: HoneyCardProps) {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="bg-[white] p-4 rounded-xl shadow-md">
-        <div className="bg-white rounded-xl overflow-hidden max-w-md">
-          <div className="relative w-full h-94">
+        <div className="bg-white rounded-xl overflow-hidden max-w-xl">
+          <div className="relative w-full h-120">
             <Image
               src={imageSrc}
               alt="Apicultor em Moreilândia"
