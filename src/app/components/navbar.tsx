@@ -37,7 +37,7 @@ export default function Navbar() {
               Produtos
             </Link>
             <Link
-              href="#produtores"
+              href="/produtores"
               className="hover:text-amber-600 transition"
             >
               Produtores

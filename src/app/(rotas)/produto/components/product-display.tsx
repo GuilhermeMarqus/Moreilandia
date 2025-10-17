@@ -1,5 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 interface ProductDisplayProps {
   product: {
@@ -18,10 +22,11 @@ interface ProductDisplayProps {
     apicultorPhone: string;
     apicultorEmail: string;
     memberSince: string;
+    apicultorId: string;
   };
 }
-
 const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
+  const router = useRouter()
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl mt-20">
       <div className="flex flex-col lg:flex-row gap-8">
@@ -95,7 +100,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
       {/* Seção do Produtor */}
       <div className="mt-8 flex flex-col items-center w-full">
         <h2 className="text-2xl font-bold mb-6">Produtor</h2>
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 border border-gray-200 p-6 rounded-lg shadow-sm w-full max-w-7xl">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 w-full max-w-7xl">
           <div className="relative w-28 h-28 rounded-full overflow-hidden flex-shrink-0">
             <Image
               src="Produtor 1.svg"
@@ -116,7 +121,9 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
             <h4 className="text-lg font-semibold">Contatos</h4>
             <p className="text-gray-700">{product.apicultorPhone}</p>
             <p className="text-gray-700 mb-4">{product.apicultorEmail}</p>
-            <Button className="bg-transparent hover:bg-[#0B97E4] hover:text-white text-[#0B97E4] border-1 border-[#0B97E4] rounded-xl transition-all duration-300 hover:scale-105">
+            <Button 
+            onClick={() => router.push(`/produtores/${product.apicultorId}`)}
+            className="bg-transparent hover:bg-[#0B97E4] hover:text-white text-[#0B97E4] border-1 border-[#0B97E4] rounded-xl transition-all duration-300 hover:scale-105">
               Veja mais
             </Button>
           </div>
