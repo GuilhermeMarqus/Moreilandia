@@ -30,6 +30,7 @@ export default function Navbar() {
               href="/#beneficios"
               className="hover:text-amber-600 transition"
               onClick={() => router.push("./beneficios")}
+              
             >
               Benefícios
             </Link>

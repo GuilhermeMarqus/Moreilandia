@@ -22,8 +22,8 @@ export default function ProductCard({
 const router = useRouter();
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-between text-center max-w-lg h-auto border-1 border-amber-500">
-      <div className="w-full h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center overflow-hidden">
+    <div className="rounded-2xl shadow-lg p-6 flex flex-col items-center justify-between text-center max-w-lg border-1 border-amber-500">
+      <div className="w-full rounded-md mb-4 flex items-center justify-center overflow-hidden">
         {imageSrc ? (
           <Image
             src={imageSrc}

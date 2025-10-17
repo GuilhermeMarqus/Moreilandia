@@ -80,7 +80,7 @@ export default function Produtores() {
               <p>{produtor.email}</p>
               <Link
                 href={`/produtores/${produtor.id}`}
-                className="mt-2 inline-block bg-blue-50 text-blue-500 px-4 py-2 rounded-full border border-blue-200 hover:bg-blue-100 transition"
+                className="mt-2 inline-block bg-white text-[#0B97E4] px-4 p-1 rounded-[20px] border border-[#0B97E4] hover:bg-[#0B97E4] hover:text-white transition"
               >
                 Ver mais
               </Link>

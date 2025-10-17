@@ -11,7 +11,7 @@ const produtores = [
     membroDesde: 2025,
     telefone: "87 9 9999-9999",
     email: "produtor@email.com",
-    foto: "/images/francisco.jpg",
+    foto: "/Produtor 1.svg",
   },
   {
     id: 2,
@@ -42,28 +42,33 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
   if (!produtor) return notFound();
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <Image
-          src={produtor.foto}
-          alt={produtor.nome}
-          width={160}
-          height={160}
-          className="rounded-full object-cover w-40 h-40"
-        />
-        <h1 className="text-2xl font-bold">{produtor.nome}</h1>
-        <p className="text-gray-600">
-          {produtor.cidade} - {produtor.estado}
-        </p>
-        <p className="text-gray-500 text-sm">
-          Membro desde {produtor.membroDesde}
-        </p>
-        <div className="mt-4 border-t pt-4 text-gray-700">
-          <p>
-            <strong>Telefone:</strong> {produtor.telefone}
+    <div className="w-212 h-full flex mt-15 max-w-3xl mx-auto justify-center">
+      <div className="w-full h-full flex items-center gap-4 text-center">
+        <div className="flex flex-col items-center w-full">
+          <Image
+            src={produtor.foto}
+            alt={produtor.nome}
+            width={160}
+            height={160}
+            className=" object-cover w-40 h-40"
+          />
+          <div className="flex flex-col items-center mt-4 border-t pt-4 text-gray-700">
+            <h1 className="font-bold text-2xl">Contatos</h1>
+            <p>
+              <strong>Telefone:</strong> {produtor.telefone}
+            </p>
+            <p>
+              <strong>Email:</strong> {produtor.email}
+            </p>
+          </div>
+        </div>
+        <div className="w-full flex flex-col items-center justify-center-p6">
+          <h1 className="text-2xl font-bold">{produtor.nome}</h1>
+          <p className="text-gray-600">
+            {produtor.cidade} - {produtor.estado}
           </p>
-          <p>
-            <strong>Email:</strong> {produtor.email}
+          <p className="text-gray-500 text-sm">
+            Membro desde {produtor.membroDesde}
           </p>
           <p>
             <strong>Produtos cadastrados:</strong> {produtor.produtos}
