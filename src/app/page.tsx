@@ -60,25 +60,25 @@ export default function Home() {
 
         {/* Lado Direito - Conteúdo e Botão */}
         <div className="absolute inset-0 flex items-end justify-center px-40 py-20 lg:justify-end lg:pl-32">
-  <div className="bg-[#FAFBFB]/90 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl max-w-lg text-center lg:text-left">
-    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-      Conheça, Apoie e Descubra a Cultura do Mel na Região
-    </h2>
+          <div className="bg-[#FAFBFB]/90 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl max-w-lg text-center lg:text-left">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+              Conheça, Apoie e Descubra a Cultura do Mel na Região
+            </h2>
 
-    <p className="text-gray-600 mb-6 text-base md:text-lg">
-      Descubra os segredos da apicultura tradicional e os benefícios
-      únicos do mel de Moreilândia.
-    </p>
+            <p className="text-gray-600 mb-6 text-base md:text-lg">
+              Descubra os segredos da apicultura tradicional e os benefícios
+              únicos do mel de Moreilândia.
+            </p>
 
-    <Button
-      className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-6 md:px-8 py-3 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
-      onClick={() => router.push('#cultura-do-mel')}
-    >
-      Veja mais
-      <MoveDown className="ml-2 text-lg" />
-    </Button>
-  </div>
-</div>
+            <Button
+              className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-6 md:px-8 py-3 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+              onClick={() => router.push("#cultura-do-mel")}
+            >
+              Veja mais
+              <MoveDown className="ml-2 text-lg" />
+            </Button>
+          </div>
+        </div>
       </section>
       <main
         id="cultura-do-mel"
@@ -120,8 +120,9 @@ export default function Home() {
             />
           </div>
           <div className="pt-35">
-            <Button className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6"
-            onClick={() => router.push("./historia")}
+            <Button
+              className="bg-[#742406] hover:bg-[#451706] text-[20px] p-6"
+              onClick={() => router.push("./historia")}
             >
               Veja Mais
             </Button>

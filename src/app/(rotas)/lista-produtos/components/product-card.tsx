@@ -22,8 +22,8 @@ export default function ProductCard({
 const router = useRouter();
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-between text-center max-w-lg h-auto border-1 border-amber-500">
-      <div className="w-full h-40 bg-gray-200 rounded-md mb-4 flex items-center justify-center overflow-hidden">
+    <div className="max-w-90 rounded-2xl shadow-lg p-3 flex flex-col items-center justify-between text-center border-1 border-amber-500">
+      <div className="rounded-md mb-4 flex items-center justify-center overflow-hidden">
         {imageSrc ? (
           <Image
             src={imageSrc}
@@ -37,7 +37,7 @@ const router = useRouter();
         )}
       </div>
       <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm mb-4 flex-grow">{description}</p>
+      <p className="text-gray-600 text-sm mb-4 flex-grow text-wrap">{description}</p>
       {status && (
         <p className="text-gray-500 text-xs mb-4">
           Usado - <span className="font-semibold">{status}</span>

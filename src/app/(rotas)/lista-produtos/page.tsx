@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 const products = [
   {
     id: 1,
-    imageSrc: "/placeholder-image.svg", // Substitua com o caminho real da imagem
+    imageSrc: "/foto-produto.svg", // Substitua com o caminho real da imagem
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -15,7 +15,7 @@ const products = [
   },
   {
     id: 2,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -23,7 +23,7 @@ const products = [
   },
   {
     id: 3,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -31,7 +31,7 @@ const products = [
   },
   {
     id: 4,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -39,7 +39,7 @@ const products = [
   },
   {
     id: 5,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -47,7 +47,7 @@ const products = [
   },
   {
     id: 6,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -55,7 +55,7 @@ const products = [
   },
   {
     id: 7,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -63,7 +63,7 @@ const products = [
   },
   {
     id: 8,
-    imageSrc: "/placeholder-image.svg",
+    imageSrc: "/ImageIcon.svg",
     title: "Cilindro alveolador doméstico",
     description:
       "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
@@ -75,12 +75,12 @@ export default function Produtos() {
   
   
   return (
-    <main className="min-h-screen w-full bg[#FAFBFB] text-white p-8">
+    <main className="min-h-screen bg[#FAFBFB] text-white p-15">
       <h1 className="text-center text-4xl font-bold text-amber-600 mb-10 mt-16">
         Todos os produtos
       </h1>
 
-      <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center mb-10">
         {products.map((product) => (
           <ProductCard key={product.id} {...product} />
         ))}
