@@ -3,12 +3,13 @@ import { PenLine, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function ProdutorPage() {
+const ProdutorPage = () => {
   return (
     <>
-      <div className="flex-1 p-6 bg-gray-100">
-        <div className="flex justify-end space-x-4 mb-6">
+      <div className="flex-1 p-4 sm:p-6 bg-gray-100">
+        <div className="flex justify-end space-x-2 sm:space-x-4 mb-4 sm:mb-6">
           <Button variant="outline">Editar</Button>
           <Button variant="destructive">Excluir</Button>
         </div>
@@ -25,13 +26,13 @@ export default function ProdutorPage() {
               />
             </div>
             <div>
-              <div className="mb-4">
-                <h2 className="text-xl font-bold">Nome</h2>
+              <div className="mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl font-bold">Nome</h2>
                 <p>Firmino José de Jesus</p>
                 <p>Moreilândia - Pernambuco</p>
               </div>
-              <div className="mb-4">
-                <h2 className="text-xl font-bold">Contatos</h2>
+              <div className="mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl font-bold">Contatos</h2>
                 <p>87 9 9999-9999</p>
                 <p>produtor@email.com</p>
               </div>
@@ -41,24 +42,26 @@ export default function ProdutorPage() {
               </div>
             </div>
           </div>
-          <div className="mt-6">
-            <h2 className="text-xl font-bold mb-2">Biografia</h2>
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
-            </p>
+          <div className="mt-4 sm:mt-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-2">Biografia</h2>
+            <ScrollArea className="h-32 rounded-md border p-4">
+              <p className="text-sm sm:text-base">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book. It has
+                survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged. It was
+                popularised in the 1960s with the release of Letraset sheets
+                containing Lorem Ipsum passages, and more recently with desktop
+                publishing software like Aldus PageMaker including versions of
+                Lorem Ipsum.
+              </p>
+            </ScrollArea>
           </div>
         </Card>
 
-        <h2 className="text-2xl font-bold mb-4">Produtos</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">Produtos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((id) => (
             <Card key={id} className="flex flex-col items-center p-4">
@@ -98,3 +101,5 @@ export default function ProdutorPage() {
     </>
   );
 }
+
+export default ProdutorPage;
