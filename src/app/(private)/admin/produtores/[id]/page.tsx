@@ -6,6 +6,7 @@ import { PenLine, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
+import { useState } from "react";
 
 const adminProdutores = [
   {
@@ -92,11 +93,31 @@ const adminProdutores = [
 export default function ProdutorPage({ params }: { params: { id: string } }) {
   const produtores = adminProdutores.find((p) => p.id === Number(params.id));
   if (!produtores) return notFound(); 
+
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [produtor, setProdutor] = useState(produtores);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setProdutor({ ...produtor, [e.target.name]: e.target.value });
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      console.log("Salvando dados atualizados:", produtor);
+      
+    }
+    setIsEditing(!isEditing);
+  };
+
   return (
     <>
       <div className="flex-1 p-6 bg-gray-100">
         <div className="flex justify-end space-x-4 mb-6">
-          <Button variant="outline">Editar</Button>
+          <Button variant={isEditing ? "default" : "outline"}
+            onClick={handleEditToggle}>{isEditing ? "Salvar" : "Editar"}</Button>
           <Button variant="destructive">Excluir</Button>
         </div>
 
@@ -114,13 +135,51 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
             <div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">Nome</h2>
-                <p>{produtores.nome}</p>
-                <p>{produtores.cidade}</p>
+                {isEditing ? (
+                  <>
+                    <input
+                      name="nome"
+                      value={produtor.nome}
+                      onChange={handleChange}
+                      className="border rounded-md p-2 w-full mb-2"
+                    />
+                    <input
+                      name="cidade"
+                      value={produtor.cidade}
+                      onChange={handleChange}
+                      className="border rounded-md p-2 w-full"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <p>{produtor.nome}</p>
+                    <p>{produtor.cidade}</p>
+                  </>
+                )}
               </div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">Contatos</h2>
-                <p>{produtores.telefone}</p>
-                <p>{produtores.email}</p>
+                  {isEditing ? (
+                  <>
+                    <input
+                      name="telefone"
+                      value={produtor.telefone}
+                      onChange={handleChange}
+                      className="border rounded-md p-2 w-full mb-2"
+                    />
+                    <input
+                      name="email"
+                      value={produtor.email}
+                      onChange={handleChange}
+                      className="border rounded-md p-2 w-full"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <p>{produtor.telefone}</p>
+                    <p>{produtor.email}</p>
+                  </>
+                )}
               </div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">ID</h2>
@@ -130,9 +189,17 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
           </div>
           <div className="mt-6">
             <h2 className="text-xl font-bold mb-2">Biografia</h2>
-            <p>
-              {produtores.description}
-            </p>
+            {isEditing ? (
+              <textarea
+                name="description"
+                value={produtor.description}
+                onChange={handleChange}
+                className="border rounded-md p-2 w-full"
+                rows={5}
+              />
+            ) : (
+              <p>{produtor.description}</p>
+            )}
           </div>
         </Card>
 
