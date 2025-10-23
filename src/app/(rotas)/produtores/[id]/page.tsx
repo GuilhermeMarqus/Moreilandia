@@ -89,8 +89,8 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
   if (!produtor) return notFound();
 
   return (
-    <div className="max-w-250 h-full flex flex-col mt-15 max-w-3xl mx-auto justify-center p-10">
-      <div className="w-full h-full flex items-center gap-4 text-center">
+    <div className="h-full flex flex-col mt-15 max-w-3xl mx-auto justify-center p-10">
+      <div className="w-full h-full flex max-md:flex-col md items-center gap-4 text-center">
         <div className="flex flex-col items-center w-full">
           <Image
             src={produtor.foto}
@@ -109,7 +109,7 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
             </p>
           </div>
         </div>
-        <div className="w-300 flex flex-col items-start justify-center p-6 gap-1 text-left">
+        <div className="w-auto flex flex-col items-start justify-center p-6 gap-1 text-left">
           <h1 className="text-2xl font-bold">{produtor.nome}</h1>
           <p className="text-gray-600">
             {produtor.cidade} - {produtor.estado}
@@ -129,7 +129,7 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
       {produtor.products && produtor.products.length > 0 && (
         <section className="w-full flex flex-col items-center mt-10">
           <h2 className="text-3xl font-bold mb-6">Produtos do Produtor</h2>
-          <div className="max-w-230 w-250 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="max-w-230 w-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {produtor.products.map((product, index) => (
               <ProductCard
                 key={index}
