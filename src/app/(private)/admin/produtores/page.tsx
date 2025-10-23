@@ -85,7 +85,7 @@ export default function ProdutoresPage() {
       ))}
     </div>  
 
-      <div className="flex justify-center space-x-4">
+      <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
         <Button variant="outline">Visualizar</Button>
         <Button>Cadastrar</Button>
         <Button variant="outline">Editar</Button>
