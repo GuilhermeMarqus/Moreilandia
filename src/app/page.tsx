@@ -39,18 +39,18 @@ export default function Home() {
             className="object-cover w-full h-full"
           />
         </div>
-        <div className="w-full h-full flex justify-center z-1000">
+        <div className="w-full h-full flex justify-center">
           <Image
             src="/LOGO COM NOME.png"
             alt="Logo com nome"
             height={450}
             width={450}
-            className="mb-[450]"
+            className="mb-[450] z-1"
           />
         </div>
 
         {/* Apicultor e Logo - Visível apenas em desktop ou telas maiores */}
-        <div className="hidden lg:flex w-full h-full absolute inset-0 items-end justify-between px-20 pb-10">
+        <div className="hidden lg:flex w-full h-full absolute inset-0 items-end justify-between px-20">
           <Image
             src="/Apicultor png.png"
             alt="Apicultor"
@@ -74,7 +74,7 @@ export default function Home() {
             alt="Apicultor"
             height={150}
             width={250}
-            className="mt-110"
+            className="mt-30"
           />
           <Image
             src="/LOGO COM NOME.png"
@@ -98,7 +98,7 @@ export default function Home() {
             </p>
 
             <Button
-              className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-4 md:px-8 py-2 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+              className="bg-[#f6a51e] hover:bg-[#a36600] text-white z-100 px-4 md:px-8 py-2 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105"
               onClick={() => router.push("#cultura-do-mel")}
             >
               Veja mais
