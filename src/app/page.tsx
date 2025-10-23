@@ -111,7 +111,7 @@ export default function Home() {
         id="cultura-do-mel"
         className="bg-[#F6A721] rounded-2xl w-full h-auto flex flex-col items-center py-8 px-4"
       >
-        <div className="p-6">
+        <div className="mt-4 md:mt-4">
           <Title
             before={"Sobre a"}
             highlight={"cultura"}
