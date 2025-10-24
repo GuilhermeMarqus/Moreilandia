@@ -102,7 +102,6 @@ export default function ProdutorPage() {
 
       <div className="flex justify-center space-x-4">
         <Button variant="outline" onClick={() => router.push(`/produtor/cadastroprod`)}>Cadastrar</Button>
-        <Button variant="destructive">Excluir</Button>
       </div>
       <style>{`
         /* Oculta a Navbar */

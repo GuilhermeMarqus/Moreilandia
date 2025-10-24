@@ -25,7 +25,7 @@ const posts = [
 ];
 
 export default function PostPage({ params }: { params: { id: string } }) {
-  const postSelecionado = posts.find((p) => p.id === Number(params.id));
+  const postSelecionado = posts.find((p) => p.id === Number(p.id));
   if (!postSelecionado) return notFound();
 
     const [isEditing, setIsEditing] = useState(false);

@@ -51,7 +51,7 @@ export default function CadastrarProdutoPage() {
 
   return (
     <div className="flex-1 bg-gray-100 min-h-screen flex justify-center items-start p-6 md:p-10">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow p-8">
+      <div className="w-full max-w-6xl bg-white rounded-2xl shadow p-8">
         <h1 className="text-2xl font-semibold mb-6">Cadastrar post</h1>
 
         <div className="bg-gray-200 rounded-xl p-6 space-y-6">
