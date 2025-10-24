@@ -23,7 +23,7 @@ export default function AdminLayout({
             height={60}
             className="mb-2"
           />
-          <span className="font-bold text-lg">Olá, Admin01</span>
+          <span className="font-bold text-lg">Olá, produtor</span>
         </div>
         <nav className="w-full">
           <Link href="/produtor" passHref>
@@ -31,7 +31,7 @@ export default function AdminLayout({
               Produtos
             </Button>
           </Link>
-          <Link href="/posts" passHref>
+          <Link href="/produtor/posts" passHref>
             <Button variant="ghost" className="w-full justify-start">
               Posts
             </Button>

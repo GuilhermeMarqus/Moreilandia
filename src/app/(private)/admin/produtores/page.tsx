@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const adminProdutores = [
   {
@@ -45,15 +46,28 @@ const adminProdutores = [
 
 export default function ProdutoresPage() {
   const router = useRouter();
+  const [search, setSearch] = useState("");
+
+  const filteredProdutores = adminProdutores.filter((produtores) =>
+    produtores.nome.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <>
+    <div className="flex-1 p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Todos os produtores</h1>
+      
       <div className="relative mb-6 w-full max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <Input placeholder="Buscar" className="pl-10 w-full" />
+        <Input 
+          placeholder="Buscar" 
+          className="pl-10 w-full" 
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
-      <div>
-        {adminProdutores.map((produtores) => (
+
+      <div className="space-y-4">
+        {filteredProdutores.map((produtores) => (
           <Card key={produtores.id} className="mb-6">
             <CardHeader>
               <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
@@ -82,7 +96,6 @@ export default function ProdutoresPage() {
                   </Button>
                 </div>
               </div>
-              {/* Mais produtores podem ser adicionados aqui */}
             </CardContent>
           </Card>
         ))}
@@ -94,7 +107,7 @@ export default function ProdutoresPage() {
         <Button variant="outline">Editar</Button>
         <Button variant="destructive">Excluir</Button>
       </div>
-
+      
       <style>{`
         /* Oculta a Navbar */
         .fixed {
@@ -105,6 +118,6 @@ export default function ProdutoresPage() {
           display: none !important;
         }
       `}</style>
-    </>
+    </div>
   );
 }
