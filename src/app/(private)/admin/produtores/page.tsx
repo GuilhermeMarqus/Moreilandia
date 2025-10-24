@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const adminProdutores = [
   {
@@ -46,16 +47,31 @@ const adminProdutores = [
 
 export default function ProdutoresPage() {
   const router = useRouter();
+
+    const [search, setSearch] = useState("");
+  
+    const filteredProdutores = adminProdutores.filter((produtores) =>
+      produtores.nome.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
       <h1 className="text-2xl font-bold mb-6">Todos os produtores</h1>
-      <div className="relative mb-6 w-full max-w-md">
-
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input placeholder="Buscar" className="pl-10 w-full" />
+      {/* Barra de busca */}
+      <div className="flex justify-end mb-8">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input
+            type="text"
+            placeholder="Buscar"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border border-gray-300 rounded-full pl-9 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
         </div>
+      </div>
     <div>
-      {adminProdutores.map((produtores) => (
+      {filteredProdutores.map((produtores) => (
       <><Card key={produtores.id} className="mb-6">
             <CardHeader>
               <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
