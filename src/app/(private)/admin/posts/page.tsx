@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, Pencil, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const postsData = [
   {
@@ -35,6 +36,7 @@ const postsData = [
 
 export default function PostsPage() {
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const filteredPosts = postsData.filter((post) =>
     post.nome.toLowerCase().includes(search.toLowerCase())
@@ -94,7 +96,7 @@ export default function PostsPage() {
 
       {/* Botões inferiores */}
       <div className="flex justify-center mt-10 space-x-4">
-        <Button variant="outline">Cadastrar</Button>
+        <Button variant="outline" onClick={() => router.push(`/admin/posts/cadastrarpost`)}>Cadastrar</Button>
       </div>
        <style>{`
         /* Oculta a Navbar */
