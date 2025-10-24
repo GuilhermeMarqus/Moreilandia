@@ -1,6 +1,5 @@
-"use client"
+"use client";
 
-import Image from "next/image";
 import { Search, PenLine, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -50,13 +49,12 @@ export default function ProdutoresPage() {
     <>
       <h1 className="text-2xl font-bold mb-6">Todos os produtores</h1>
       <div className="relative mb-6 w-full max-w-md">
-
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input placeholder="Buscar" className="pl-10 w-full" />
-        </div>
-    <div>
-      {adminProdutores.map((produtores) => (
-      <><Card key={produtores.id} className="mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Input placeholder="Buscar" className="pl-10 w-full" />
+      </div>
+      <div>
+        {adminProdutores.map((produtores) => (
+          <Card key={produtores.id} className="mb-6">
             <CardHeader>
               <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
                 <div>Nome</div>
@@ -69,9 +67,14 @@ export default function ProdutoresPage() {
                 <div>{produtores.nome}</div>
                 <div>{produtores.id}</div>
                 <div className="flex justify-end space-x-2">
-                  <Button variant="ghost" size="icon"
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="cursor-pointer"
-                    onClick={() => router.push(`/admin/produtores/${produtores.id}`)}>
+                    onClick={() =>
+                      router.push(`/admin/produtores/${produtores.id}`)
+                    }
+                  >
                     <PenLine className="h-4 w-4 cursor-pointer" />
                   </Button>
                   <Button variant="ghost" size="icon">
@@ -81,9 +84,9 @@ export default function ProdutoresPage() {
               </div>
               {/* Mais produtores podem ser adicionados aqui */}
             </CardContent>
-          </Card></>
-      ))}
-    </div>  
+          </Card>
+        ))}
+      </div>
 
       <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
         <Button variant="outline">Visualizar</Button>
@@ -91,6 +94,7 @@ export default function ProdutoresPage() {
         <Button variant="outline">Editar</Button>
         <Button variant="destructive">Excluir</Button>
       </div>
+
       <style>{`
         /* Oculta a Navbar */
         .fixed {

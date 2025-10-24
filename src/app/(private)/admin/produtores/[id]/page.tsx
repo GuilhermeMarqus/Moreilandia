@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { PenLine, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { notFound } from "next/navigation";
-import { useState } from "react";
+import { notFound, useParams } from "next/navigation";
+import { use, useState } from "react";
 
 const adminProdutores = [
   {
@@ -20,7 +20,7 @@ const adminProdutores = [
     email: "produtor@email.com",
     foto: "/Produtor 1.svg",
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     products: [
       {
         imageSrc: "/foto-produto.svg",
@@ -91,10 +91,8 @@ const adminProdutores = [
 ];
 
 export default function ProdutorPage({ params }: { params: { id: string } }) {
-  const produtores = adminProdutores.find((p) => p.id === Number(params.id));
-  if (!produtores) return notFound(); 
-
-  
+  const produtores = adminProdutores.find((p) => p.id === Number(p.id));
+  if (!produtores) return notFound();
   const [isEditing, setIsEditing] = useState(false);
   const [produtor, setProdutor] = useState(produtores);
 
@@ -107,7 +105,6 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
   const handleEditToggle = () => {
     if (isEditing) {
       console.log("Salvando dados atualizados:", produtor);
-      
     }
     setIsEditing(!isEditing);
   };
@@ -116,8 +113,12 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
     <>
       <div className="flex-1 p-6 bg-gray-100">
         <div className="flex justify-end space-x-4 mb-6">
-          <Button variant={isEditing ? "default" : "outline"}
-            onClick={handleEditToggle}>{isEditing ? "Salvar" : "Editar"}</Button>
+          <Button
+            variant={isEditing ? "default" : "outline"}
+            onClick={handleEditToggle}
+          >
+            {isEditing ? "Salvar" : "Editar"}
+          </Button>
           <Button variant="destructive">Excluir</Button>
         </div>
 
@@ -159,7 +160,7 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
               </div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">Contatos</h2>
-                  {isEditing ? (
+                {isEditing ? (
                   <>
                     <input
                       name="telefone"
@@ -229,7 +230,7 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
           ))}
         </div>
       </div>
-          
+
       <style>{`
         /* Oculta a Navbar */
         .fixed {
