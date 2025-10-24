@@ -34,7 +34,7 @@ export default function AdminLayout({
         <nav className="w-full">
           <Link href="/produtor" passHref>
             <Button variant="ghost" className="w-full justify-start mb-2">
-              Produtores
+              Produtos
             </Button>
           </Link>
           <Link href="/produtor/posts" passHref>
@@ -57,7 +57,7 @@ export default function AdminLayout({
           className="bg-gray-200 p-4 flex flex-col items-center absolute"
         >
           <SheetHeader className="p-6">
-            <SheetTitle>Menu Administrativo</SheetTitle>
+            <SheetTitle>Menu do Produtor</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col items-center mb-6">
             <Image
@@ -72,7 +72,7 @@ export default function AdminLayout({
           <nav className="w-full">
             <Link href="/produtor" passHref>
               <Button variant="ghost" className="w-full justify-start mb-2">
-                Produtores
+                Produtos
               </Button>
             </Link>
             <Link href="/produtor/posts" passHref>

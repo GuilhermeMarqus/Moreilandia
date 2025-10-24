@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { Search, PenLine, Trash2 } from "lucide-react";
@@ -63,15 +63,16 @@ export default function ProdutorPage() {
   const router = useRouter();
   return (
     <>
-      <h1 className="text-2xl font-bold mb-6">Todos os produtos</h1>
+      <div className="flex justify-center w-auto">
+        <h1 className="text-2xl font-bold mb-6">Todos os produtos</h1>
+      </div>
       <div className="relative mb-6 w-full max-w-md">
-
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input placeholder="Buscar" className="pl-10 w-full" />
-        </div>
-    <div>
-      {produtos.map((Produtos) => (
-      <><Card key={Produtos.id} className="mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Input placeholder="Buscar" className="pl-10 w-full" />
+      </div>
+      <div>
+        {produtos.map((Produtos) => (
+          <Card key={Produtos.id} className="mb-6">
             <CardHeader>
               <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
                 <div>Nome</div>
@@ -84,9 +85,12 @@ export default function ProdutorPage() {
                 <div>{Produtos.title}</div>
                 <div>{Produtos.id}</div>
                 <div className="flex justify-end space-x-2">
-                  <Button variant="ghost" size="icon"
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="cursor-pointer"
-                    onClick={() => router.push(`/produtor/${Produtos.id}`)}>
+                    onClick={() => router.push(`/produtor/${Produtos.id}`)}
+                  >
                     <PenLine className="h-4 w-4 cursor-pointer" />
                   </Button>
                   <Button variant="ghost" size="icon">
@@ -96,12 +100,17 @@ export default function ProdutorPage() {
               </div>
               {/* Mais produtores podem ser adicionados aqui */}
             </CardContent>
-          </Card></>
-      ))}
-    </div>  
+          </Card>
+        ))}
+      </div>
 
       <div className="flex justify-center space-x-4">
-        <Button variant="outline" onClick={() => router.push(`/produtor/cadastroprod`)}>Cadastrar</Button>
+        <Button
+          variant="outline"
+          onClick={() => router.push(`/produtor/cadastroprod`)}
+        >
+          Cadastrar
+        </Button>
       </div>
       <style>{`
         /* Oculta a Navbar */

@@ -76,7 +76,7 @@ const produtos = [
 ];
 
 export default function ProdutoPage({ params }: { params: { id: string } }) {
-  const produtoEncontrado  = produtos.find((p) => p.id === Number(params.id));
+  const produtoEncontrado  = produtos.find((p) => p.id === Number(p.id));
   if (!produtoEncontrado) return notFound(); 
 
   

@@ -31,8 +31,8 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
     <div className="container mx-auto px-4 py-8 max-w-6xl mt-20">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Imagens do Produto */}
-        <div className="w-full lg:w-1/2 flex gap-4">
-          <div className="flex flex-col gap-2 pt-1">
+        <div className="w-full lg:w-1/2 flex max-md:flex-col-reverse max-lg:items-center gap-4">
+          <div className="flex md:min-md:flex-col gap-2 pt-1">
             {product.images.map((image, index) => (
               <div
                 key={index}
@@ -48,13 +48,13 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
               </div>
             ))}
           </div>
-          <div className="relative flex-1 h-[450px] rounded-lg overflow-hidden border-1 border-[#FACA7A]">
+          <div className="relative flex-1 h-120 w-120 rounded-lg overflow-hidden border-[#FACA7A]">
             <Image
               src="foto-produto.svg"
               alt={product.name}
-              layout="fill"
               objectFit="cover"
-              className="rounded-lg"
+              width={480}
+              height={480}
             />
           </div>
         </div>

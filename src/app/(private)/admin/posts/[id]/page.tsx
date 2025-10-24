@@ -28,7 +28,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
   const postSelecionado = posts.find((p) => p.id === Number(p.id));
   if (!postSelecionado) return notFound();
 
-    const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [post, setPost] = useState(postSelecionado);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -63,11 +63,15 @@ export default function PostPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-        <div className="flex justify-end space-x-4 mb-6">
-          <Button variant={isEditing ? "default" : "outline"}
-            onClick={handleEditToggle}>{isEditing ? "Salvar" : "Editar"}</Button>
-          <Button variant="destructive">Excluir</Button>
-        </div>
+      <div className="flex justify-end space-x-4 mb-6">
+        <Button
+          variant={isEditing ? "default" : "outline"}
+          onClick={handleEditToggle}
+        >
+          {isEditing ? "Salvar" : "Editar"}
+        </Button>
+        <Button variant="destructive">Excluir</Button>
+      </div>
       <div className="max-w-5xl mx-auto bg-white rounded-2xl p-8 shadow">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           <div className="relative w-48 h-48 flex-shrink-0">
@@ -77,7 +81,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
               fill
               className="rounded-lg object-cover"
             />
-             {isEditing && (
+            {isEditing && (
               <>
                 <div
                   onClick={handleImageClick}
@@ -98,8 +102,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
 
           <div>
             <div>
-            <h1 className="text-2xl font-bold mb-2">Nome</h1>
-            {isEditing ? (
+              <h1 className="text-2xl font-bold mb-2">Nome</h1>
+              {isEditing ? (
                 <input
                   type="text"
                   name="nome"
@@ -112,8 +116,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
               )}
             </div>
             <div>
-            <p className="text-gray-700 leading-relaxed">Descrição</p>
-             {isEditing ? (
+              <p className="text-gray-700 leading-relaxed">Descrição</p>
+              {isEditing ? (
                 <textarea
                   name="descricao"
                   value={post.descricao}
@@ -126,14 +130,14 @@ export default function PostPage({ params }: { params: { id: string } }) {
               )}
             </div>
             <div>
-            <p className="mt-4 text-sm text-gray-500">ID:</p>
-            <p>{post.id}</p>
+              <p className="mt-4 text-sm text-gray-500">ID:</p>
+              <p>{post.id}</p>
             </div>
           </div>
         </div>
       </div>
       <div className="pt-40">
-      <h2 className="text-2xl font-bold mb-4">Produtos</h2>
+        <h2 className="text-2xl font-bold mb-4">Produtos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((id) => (
             <Card key={id} className="flex flex-col items-center p-4">
@@ -158,8 +162,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
             </Card>
           ))}
         </div>
-        </div>
-        <style>{`
+      </div>
+      <style>{`
         /* Oculta a Navbar */
         .fixed {
           display: none !important;
