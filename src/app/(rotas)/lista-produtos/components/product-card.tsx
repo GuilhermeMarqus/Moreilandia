@@ -12,6 +12,8 @@ interface ProductCardProps {
   status?: string;
 }
 
+//colocar para ser puxado por ID
+
 export default function ProductCard({
   imageSrc,
   title,

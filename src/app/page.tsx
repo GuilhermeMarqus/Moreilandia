@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoveDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Footer from "./components/footer";
 
 export default function Home() {
   const router = useRouter();
@@ -303,6 +304,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

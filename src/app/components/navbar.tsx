@@ -37,7 +37,7 @@ export default function Navbar() {
             >
               Benefícios
             </Link>
-            <Link href="/lista-produtos" className="hover:text-amber-600 transition">
+            <Link href="./lista-produtos" className="hover:text-amber-600 transition">
               Produtos
             </Link>
             <Link

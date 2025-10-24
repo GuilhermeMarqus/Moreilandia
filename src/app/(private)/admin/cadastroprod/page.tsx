@@ -21,6 +21,8 @@ export default function CadastrarProdutoPage() {
     setSalvo(false);
   };
 
+  // concertar com blob, mandar separado a url e o file
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

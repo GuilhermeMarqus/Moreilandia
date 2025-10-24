@@ -90,8 +90,10 @@ const adminProdutores = [
   },
 ];
 
+//alterar de produtores para produtor
+
 export default function ProdutorPage({ params }: { params: { id: string } }) {
-  const produtores = adminProdutores.find((p) => p.id === Number(p.id));
+  const produtores = adminProdutores.find((p) => p.id === Number(params.id));
   if (!produtores) return notFound();
   const [isEditing, setIsEditing] = useState(false);
   const [produtor, setProdutor] = useState(produtores);
