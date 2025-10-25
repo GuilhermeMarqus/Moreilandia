@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +11,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault(); // Previne o recarregamento da página
+
+    try {
+      const response = await axios.post('http://localhost:3333/session', { // Ajuste a URL do seu backend se necessário
+        email,
+        senha: password, // O backend espera 'senha', não 'password'
+      });
+
+      const { token } = response.data;
+      localStorage.setItem('moreilandia.token', token); // Armazena o token
+      router.push('/produtor'); // Redireciona para uma página protegida
+
+    } catch (error) {
+      alert('Falha no login. Verifique suas credenciais.');
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col w-full h-200 justify-center items-center">
@@ -31,7 +58,7 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -40,13 +67,21 @@ const Login = () => {
                     type="email"
                     placeholder="seuemail@email.com"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Senha</Label>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
               </div>
             </form>
