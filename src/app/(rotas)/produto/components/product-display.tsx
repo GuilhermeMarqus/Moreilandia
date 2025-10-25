@@ -29,7 +29,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
   const router = useRouter()
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl mt-20">
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 p-4">
         {/* Imagens do Produto */}
         <div className="w-full lg:w-1/2 flex max-md:flex-col-reverse max-lg:items-center gap-4">
           <div className="flex md:min-md:flex-col gap-2 pt-1">
@@ -48,19 +48,19 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
               </div>
             ))}
           </div>
-          <div className="relative flex-1 h-120 w-120 rounded-lg overflow-hidden border-[#FACA7A]">
+          <div className="relative flex-1 rounded-lg overflow-hidden border-[#FACA7A]">
             <Image
               src="foto-produto.svg"
               alt={product.name}
               objectFit="cover"
-              width={480}
-              height={480}
+              width={350}
+              height={350}
             />
           </div>
         </div>
 
         {/* Detalhes do Produto */}
-        <div className="w-full lg:w-1/2 p-4">
+        <div className="w-full lg:w-1/2">
           <h3 className="text-gray-600 mb-2 text-base">
             Usado - Estado de <span className="font-semibold">novo</span>
           </h3>
