@@ -11,27 +11,46 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // Importar jwtDecode
 //login de teste na pag prisma/seed.ts
 const Login = () => {
-  // const [email, setEmail] = useState(""); // REMOVER
-  // const [password, setPassword] = useState(""); // REMOVER
   const router = useRouter();
   const { register, handleSubmit, formState: { errors }, setError } = useForm();
 
   const handleLogin = async (data: any) => {
     try {
-      const response = await axios.post("https://extensao-8-semestre-si-2025-2.onrender.com/api/auth/login", {
-        email: data.email,
-        senha: data.password,
-      });
+      const response = await axios.post(
+        "https://extensao-8-semestre-si-2025-2.onrender.com/api/auth/login",
+        {
+          email: data.email,
+          senha: data.password,
+        }
+      );
 
-      const { token } = response.data;
-      localStorage.setItem("moreilandia.token", token);
-      router.push("/produtor");
+      const { token } = response.data; // A API retorna apenas o token e outros dados, o papel está dentro do token
+
+      const decodedToken: { papel: string, usuario: any } = jwtDecode(token);
+      const userRole = decodedToken.papel;
+      const userInfo = decodedToken.usuario || {}; // Obter outras infos do usuário, se existirem no payload
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(userInfo)); // Armazenar as informações do usuário do token
+
+      // Remover logs de diagnóstico
+      // console.log("Objeto de usuário após login:", usuario);
+      // console.log("Papel do usuário (dentro de usuario.papel):", usuario?.papel);
+
+      if (userRole === "PRODUTOR") {
+        router.push("/produtor");
+      } else if (userRole === "ADMIN") {
+        router.push("/admin/produtores");
+      } else {
+        // Rota padrão para outros papéis ou caso de erro
+        router.push("/"); // Ou outra rota padrão
+      }
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
         setError("email", { message: "Credenciais inválidas" });
@@ -87,7 +106,11 @@ const Login = () => {
             </form>
           </CardContent>
           <CardFooter className="flex gap-2">
-            <Button type="submit" className="w-auto bg-slate-600" onClick={handleSubmit(handleLogin)}>
+            <Button
+              type="submit"
+              className="w-auto bg-slate-600"
+              onClick={handleSubmit(handleLogin)}
+            >
               Entrar
             </Button>
             <a

@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const Register = () => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors }, setError } = useForm();
+  const { register, handleSubmit, formState: { errors }, setError, setValue } = useForm();
 
   const handleRegister = async (data: any) => {
     try {
@@ -27,7 +27,7 @@ const Register = () => {
         nome: data.name,
         email: data.email,
         senha: data.password,
-        papel: data.role, // Adiciona o campo ADMIN ou PRODUTOR
+        papel: data.papel, // Adiciona o campo ADMIN ou PRODUTOR
       });
 
       // Se o registro for bem-sucedido, você pode querer logar o usuário
@@ -97,9 +97,9 @@ const Register = () => {
                 </div>
                 {/* Novo campo para seleção de Papel */}
                 <div className="grid gap-2">
-                  <Label htmlFor="role">Papel</Label>
-                  <Select onValueChange={(value: string) => register("role").onChange({ target: { value } })}> 
-                    <SelectTrigger className="w-full">
+                  <Label htmlFor="papel">Papel</Label>
+                  <Select onValueChange={(value: "ADMIN" | "PRODUTOR") => setValue("papel", value)}>
+                    <SelectTrigger className="w-full" {...register("papel", { required: "Papel é obrigatório" })}>
                       <SelectValue placeholder="Selecione um papel" />
                     </SelectTrigger>
                     <SelectContent>
@@ -107,7 +107,7 @@ const Register = () => {
                       <SelectItem value="ADMIN">Admin</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.role && <p className="text-red-500 text-sm">{errors.role.message as string}</p>}
+                  {errors.papel && <p className="text-red-500 text-sm">{errors.papel.message as string}</p>}
                 </div>
               </div>
             </form>
