@@ -35,6 +35,13 @@ export default function Navbar() {
               className="hover:text-amber-600 transition"
               onClick={() => router.push("./beneficios")}
             >
+              Postagens
+            </Link>
+            <Link
+              href="/#beneficios"
+              className="hover:text-amber-600 transition"
+              onClick={() => router.push("./beneficios")}
+            >
               Benefícios
             </Link>
             <Link href="./lista-produtos" className="hover:text-amber-600 transition">

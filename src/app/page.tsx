@@ -108,6 +108,50 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <div className=" rounded-2xl w-full h-auto flex flex-col items-center py-8 px-4" >
+        <div className="mt-2 md:mt-2">
+          <Title
+            before={""}
+            highlight={"Postagens"}
+            after={""}
+            yellow={""}
+          />
+        </div>
+        <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-40 pt-3 md:pt-35">
+          <Cartao
+            title={"Lorem ips un dolor"}
+            description={
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+            }
+            titleColor="#fafbfb"
+            descriptionColor="#742406"
+          />
+          <Cartao
+            title={"Lorem ips un dolor"}
+            description={
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+            }
+            titleColor="#fafbfb"
+            descriptionColor="#742406"
+          />
+          <Cartao
+            title={"Lorem ips un dolor"}
+            description={
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+            }
+            titleColor="#fafbfb"
+            descriptionColor="#742406"
+          />
+        </div>
+        <div className="pt-6 md:pt-35">
+          <Button
+            className="bg-[#742406] hover:bg-[#451706] text-[18px] p-4"
+            onClick={() => router.push("./historia")}
+          >
+            Veja Mais
+          </Button>
+        </div>
+      </div>
       <main
         id="cultura-do-mel"
         className="bg-[#F6A721] rounded-2xl w-full h-auto flex flex-col items-center py-8 px-4"
