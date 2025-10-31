@@ -24,7 +24,7 @@ const Login = () => {
 
   const handleLogin = async (data: any) => {
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", {
+      const response = await axios.post("https://extensao-8-semestre-si-2025-2.onrender.com/api/auth/login", {
         email: data.email,
         senha: data.password,
       });

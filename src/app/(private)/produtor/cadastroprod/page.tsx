@@ -12,6 +12,7 @@ export default function CadastrarProdutoPage() {
     imagem: "",
   });
   const [salvo, setSalvo] = useState(false);
+  const [carregando, setCarregando] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (
@@ -34,14 +35,61 @@ export default function CadastrarProdutoPage() {
     fileInputRef.current?.click();
   };
 
-  const handleSalvar = () => {
-    if (!produto.nome || !produto.descricao || !produto.imagem) {
+  const handleSalvar = async () => {
+    const token = localStorage.getItem('moreilandia.token');
+
+    if (!token) {
+      alert("Você presa estar logado para criar um produto");
+      setCarregando(false);
+      return;
+    }
+
+    if (!produto.nome || !produto.descricao) {
       alert("Preencha todos os campos antes de salvar.");
       return;
     }
-    console.log("Produto cadastrado:", produto);
-    setSalvo(true);
-    setTimeout(() => setSalvo(false), 3000);
+
+    const file = fileInputRef.current?.files?.[0];
+
+    if (!file) {
+      alert("Uma imagem obrigatória.");
+      return;
+    }
+
+    setCarregando(true);
+    try {
+      const response = await fetch(
+        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produto",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+           body: JSON.stringify({
+          nome: produto.nome,
+          descricao: produto.descricao,
+          foto_produto: produto.imagem,
+        }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erro ao criar post: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Post criado:", data);
+
+      setSalvo(true);
+      setProduto({ nome: "", descricao: "", imagem: "" });
+      setTimeout(() => setSalvo(false), 3000);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao salvar o post. Veja o console para mais detalhes.");
+    } finally {
+      setCarregando(false);
+    }
   };
 
   const handleDescartar = () => {
@@ -51,26 +99,26 @@ export default function CadastrarProdutoPage() {
 
   return (
     <div className="flex-1 bg-gray-100 min-h-screen flex justify-center items-start p-6 md:p-10">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow p-8">
+      <div className="w-full max-w-6xl bg-white rounded-2xl shadow p-8">
         <h1 className="text-2xl font-semibold mb-6">Cadastrar produto</h1>
 
         <div className="bg-gray-200 rounded-xl p-6 space-y-6">
           {/* Nome */}
           <div>
-            <label className="block text-sm font-medium mb-2">Nome</label>
+            <label className="block text-sm font-medium mb-2">Título</label>
             <input
               type="text"
               name="nome"
               value={produto.nome}
               onChange={handleChange}
-              placeholder="Digite o nome do produto"
+              placeholder="Digite o título do post"
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
           </div>
 
-          {/* Imagens */}
+          {/* Imagem */}
           <div>
-            <label className="block text-sm font-medium mb-2">Imagens</label>
+            <label className="block text-sm font-medium mb-2">Imagem</label>
             <div className="flex items-center space-x-4">
               <div
                 onClick={handleImageClick}
@@ -79,7 +127,7 @@ export default function CadastrarProdutoPage() {
                 {produto.imagem ? (
                   <Image
                     src={produto.imagem}
-                    alt="Imagem do produto"
+                    alt="Imagem do post"
                     fill
                     className="object-cover rounded-xl"
                   />
@@ -103,13 +151,13 @@ export default function CadastrarProdutoPage() {
           {/* Descrição */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              Descrição do produto
+              Conteúdo do post
             </label>
             <textarea
               name="descricao"
               value={produto.descricao}
               onChange={handleChange}
-              placeholder="Digite a descrição..."
+              placeholder="Digite o conteúdo..."
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
               rows={6}
             />
@@ -127,30 +175,21 @@ export default function CadastrarProdutoPage() {
           </Button>
           <Button
             onClick={handleSalvar}
+            disabled={carregando}
             className="bg-amber-500 hover:bg-amber-600 text-white"
           >
-            Salvar
+            {carregando ? "Salvando..." : "Salvar"}
           </Button>
         </div>
 
-        {/* Confirmação de produto salvo */}
+        {/* Confirmação */}
         {salvo && (
           <div className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-lg flex items-center space-x-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
             <CheckCircle2 className="h-5 w-5" />
-            <span>Produto cadastrado com sucesso!</span>
+            <span>produto cadastrado com sucesso!</span>
           </div>
         )}
       </div>
-      <style>{`
-        /* Oculta a Navbar */
-        .fixed {
-          display: none !important;
-        }
-        /* Oculta o Footer */
-        footer {
-          display: none !important;
-        }
-      `}</style>
     </div>
   );
 }
