@@ -32,9 +32,17 @@ const Login = () => {
 
       const { token } = response.data; // A API retorna apenas o token e outros dados, o papel está dentro do token
 
-      const decodedToken: { papel: string, usuario: any } = jwtDecode(token);
+      const decodedToken: { nome: string, email: string, papel: string, iat: number, exp: number, sub: string } = jwtDecode(token);
       const userRole = decodedToken.papel;
-      const userInfo = decodedToken.usuario || {}; // Obter outras infos do usuário, se existirem no payload
+      const userInfo = { // Corrigido para extrair diretamente do decodedToken
+        nome: decodedToken.nome,
+        email: decodedToken.email,
+        papel: decodedToken.papel,
+        id: decodedToken.sub, // Assumindo que 'sub' é o ID do usuário
+      };
+
+      console.log("Decoded Token:", decodedToken); // Adicionado para depuração
+      console.log("User Info to be stored:", userInfo); // Adicionado para depuração
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userInfo)); // Armazenar as informações do usuário do token

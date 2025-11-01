@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, Search, PenLine, Trash2 } from "lucide-react";
+import { Menu, Search, PenLine, Trash2, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -11,12 +13,45 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+interface UserInfo {
+  nome: string;
+  email: string;
+  papel: string;
+  id: string;
+}
 
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const user: UserInfo = JSON.parse(storedUser);
+        setUserName(user.nome);
+      } catch (error) {
+        console.error("Erro ao analisar informações do usuário do localStorage:", error);
+        setUserName("Administrador");
+      }
+    } else {
+      setUserName("Administrador");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token"); // Remover também o token
+    router.push("/login");
+  };
+
   return (
     <div className="flex min-h-screen relative">
       {/* Sidebar - Desktop */}
@@ -29,7 +64,7 @@ export default function AdminLayout({
             height={60}
             className="mb-2"
           />
-          <span className="font-bold text-lg">Olá, Admin01</span>
+          <span className="font-bold text-lg">Olá, {userName}</span>
         </div>
         <nav className="w-full">
           <Link href="/admin/produtores" passHref>
@@ -42,6 +77,14 @@ export default function AdminLayout({
               Posts
             </Button>
           </Link>
+          <Button
+            variant="ghost"
+            className="w-full justify-center mb-2"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sair
+          </Button>
         </nav>
       </aside>
 
@@ -67,7 +110,7 @@ export default function AdminLayout({
               height={60}
               className="mb-2"
             />
-            <span className="font-bold text-lg">Olá, Admin01</span>
+            <span className="font-bold text-lg">Olá, {userName}</span>
           </div>
           <nav className="w-full">
             <Link href="/admin/produtores" passHref>
@@ -80,6 +123,14 @@ export default function AdminLayout({
                 Posts
               </Button>
             </Link>
+            <Button
+              variant="ghost"
+              className="w-full justify-center mb-2"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
           </nav>
         </SheetContent>
       </Sheet>
