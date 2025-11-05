@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { jwtDecode } from "jwt-decode";
 import { Plus, Upload, CheckCircle2 } from "lucide-react";
 
 export default function CadastrarProdutoPage() {
@@ -14,6 +15,44 @@ export default function CadastrarProdutoPage() {
   const [salvo, setSalvo] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Função para decodificar token e buscar produtorId
+  const getProdutorId = async (token: string): Promise<number> => {
+    try {
+      const decoded: any = jwtDecode(token);
+      const userId = parseInt(decoded.sub); // o ID do usuário vem do subject
+
+      // Buscar produtores
+      const response = await fetch(
+        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar produtores");
+      }
+
+      const produtores = await response.json();
+
+      // Encontrar o produtor vinculado ao usuário logado
+      const produtor = produtores.find(
+        (p: any) => p.userId === userId || p.usuarioId === userId
+      );
+
+      if (!produtor) {
+        throw new Error("Nenhum produtor encontrado para este usuário");
+      }
+
+      return produtor.id;
+    } catch (err) {
+      console.error("Erro ao obter produtorId:", err);
+      throw new Error("Erro ao identificar produtor. Faça login novamente.");
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -36,61 +75,94 @@ export default function CadastrarProdutoPage() {
   };
 
   const handleSalvar = async () => {
-    const token = localStorage.getItem('moreilandia.token');
+  const token = localStorage.getItem('moreilandia.token');
 
-    if (!token) {
-      alert("Você presa estar logado para criar um produto");
-      setCarregando(false);
+  if (!token) {
+    alert("Você precisa estar logado para criar um produto.");
+    return;
+  }
+
+  try {
+    setCarregando(true);
+
+    // 🔹 Decodificar o token para obter o userId
+    const decoded: any = jwtDecode(token);
+    const userId = Number(decoded.sub); // o token contém o ID do usuário, não do produtor
+
+    if (!userId) {
+      alert("Erro: ID do usuário não encontrado no token.");
       return;
     }
 
+    // 🔹 Buscar lista de produtores
+    const response = await fetch("https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor", {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar produtores");
+    }
+
+    const produtores = await response.json();
+
+    // 🔹 Procurar produtor cujo user.id === userId
+    const produtor = produtores.find((p: any) => p.usuario.id === userId);
+
+    if (!produtor) {
+      alert("Nenhum produtor vinculado a este usuário foi encontrado.");
+      return;
+    }
+
+    const produtorId = produtor.id;
+
+    // 🔹 Validações do formulário
     if (!produto.nome || !produto.descricao) {
       alert("Preencha todos os campos antes de salvar.");
       return;
     }
 
     const file = fileInputRef.current?.files?.[0];
-
     if (!file) {
-      alert("Uma imagem obrigatória.");
+      alert("Uma imagem é obrigatória.");
       return;
     }
 
-    setCarregando(true);
-    try {
-      const response = await fetch(
-        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produto",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-           body: JSON.stringify({
-          nome: produto.nome,
-          descricao: produto.descricao,
-          foto_produto: produto.imagem,
-        }),
-        }
-      );
+    // 🔹 Criar o produto
+    const responseProd = await fetch("https://extensao-8-semestre-si-2025-2.onrender.com/api/produto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        nome: produto.nome,
+        descricao: produto.descricao,
+        foto_produto: produto.imagem,
+        produtorId: produtorId, // ✅ agora é garantido
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Erro ao criar post: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log("Post criado:", data);
-
-      setSalvo(true);
-      setProduto({ nome: "", descricao: "", imagem: "" });
-      setTimeout(() => setSalvo(false), 3000);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao salvar o post. Veja o console para mais detalhes.");
-    } finally {
-      setCarregando(false);
+    if (!responseProd.ok) {
+      const errorText = await responseProd.text();
+      console.error("Resposta do servidor:", errorText);
+      throw new Error(`Erro ao criar produto: ${responseProd.status}`);
     }
-  };
+
+    const data = await responseProd.json();
+    console.log("Produto criado com sucesso:", data);
+
+    setSalvo(true);
+    setProduto({ nome: "", descricao: "", imagem: "" });
+    setTimeout(() => setSalvo(false), 3000);
+  } catch (err) {
+    console.error("Erro ao criar produto:", err);
+    alert("Erro ao salvar o produto. Veja o console para detalhes.");
+  } finally {
+    setCarregando(false);
+  }
+};
 
   const handleDescartar = () => {
     setProduto({ nome: "", descricao: "", imagem: "" });
@@ -186,7 +258,7 @@ export default function CadastrarProdutoPage() {
         {salvo && (
           <div className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-lg flex items-center space-x-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
             <CheckCircle2 className="h-5 w-5" />
-            <span>produto cadastrado com sucesso!</span>
+            <span>Produto cadastrado com sucesso!</span>
           </div>
         )}
       </div>
