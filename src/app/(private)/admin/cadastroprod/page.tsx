@@ -1,24 +1,51 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, CheckCircle2 } from "lucide-react";
+import { Plus, Upload, CheckCircle2, PenLine, Trash2 } from "lucide-react"; // Adicionar PenLine e Trash2 para simular edição/exclusão (opcional)
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation"; // Importar useRouter
 
-export default function CadastrarProdutoPage() {
-  const [produto, setProduto] = useState({
+interface ProdutorData {
+  nome: string;
+  endereco: string;
+  contato_whatsapp: string; // Alterado de 'telefone'
+  contato_email: string; // Alterado de 'email'
+  userId: string; // Alterado de 'id'
+  biografia: string;
+  foto_perfil: string; // Alterado de 'imagem'
+}
+
+export default function CadastrarProdutorPage() {
+  const [produtor, setProdutor] = useState<ProdutorData>({
     nome: "",
-    descricao: "",
-    imagem: "",
+    endereco: "",
+    contato_whatsapp: "",
+    contato_email: "",
+    userId: "",
+    biografia: "",
+    foto_perfil: "",
   });
   const [salvo, setSalvo] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter(); // Inicializar useRouter
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      // Defina o userId do produtor com base no usuário logado
+      setProdutor((prev) => ({ ...prev, userId: user.id }));
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProduto({ ...produto, [e.target.name]: e.target.value });
+    setProdutor({ ...produtor, [e.target.name]: e.target.value });
     setSalvo(false);
   };
 
@@ -26,7 +53,7 @@ export default function CadastrarProdutoPage() {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProduto({ ...produto, imagem: imageUrl });
+      setProdutor({ ...produtor, foto_perfil: imageUrl });
       setSalvo(false);
     }
   };
@@ -39,126 +66,194 @@ export default function CadastrarProdutoPage() {
     const token = localStorage.getItem('moreilandia.token');
 
     if (!token) {
-      alert("Você presa estar logado para criar um produto");
+      alert("Você precisa estar logado para cadastrar um produtor");
       setCarregando(false);
       return;
     }
 
-    if (!produto.nome || !produto.descricao) {
-      alert("Preencha todos os campos antes de salvar.");
+    if (!produtor.nome || !produtor.endereco || !produtor.contato_whatsapp || !produtor.contato_email || !produtor.biografia) {
+      alert("Preencha todos os campos obrigatórios antes de salvar.");
       return;
     }
 
     const file = fileInputRef.current?.files?.[0];
 
-    if (!file) {
-      alert("Uma imagem obrigatória.");
-      return;
-    }
+    // if (!file) {
+    //   alert("Uma foto_perfil é obrigatória.");
+    //   return;
+    // }
 
     setCarregando(true);
 
     const formData = new FormData();
-    formData.append("titulo", produto.nome);
-    formData.append("conteudo", produto.descricao);
-    formData.append("imagem", file);
+    formData.append("nome", produtor.nome);
+    formData.append("endereco", produtor.endereco);
+    formData.append("contato_whatsapp", produtor.contato_whatsapp);
+    formData.append("email", produtor.contato_email); // Alterado para 'email'
+    formData.append("biografia", produtor.biografia);
+    if (produtor.userId) {
+      formData.append("userId", produtor.userId); // Incluir o userId na requisição
+    }
+    if (file) {
+      formData.append("foto_perfil", file);
+    }
 
     try {
       const response = await fetch(
-        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produto",
+        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor", // Alterado para /api/usuario
         {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data', // Não defina manualmente, fetch faz isso automaticamente com FormData
           },
           body: formData
         }
       );
 
       if (!response.ok) {
-        throw new Error(`Erro ao criar post: ${response.statusText}`);
+        console.error("Detalhes da resposta de erro:", await response.json()); // Adicionado para depuração
+        throw new Error(`Erro ao cadastrar produtor: ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log("Post criado:", data);
+      console.log("Produtor cadastrado:", data);
 
       setSalvo(true);
-      setProduto({ nome: "", descricao: "", imagem: "" });
+      setProdutor({ nome: "", endereco: "", contato_whatsapp: "", contato_email: "", userId: "", biografia: "", foto_perfil: "" });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Limpar o input de arquivo
+      }
       setTimeout(() => setSalvo(false), 3000);
     } catch (error) {
       console.error(error);
-      alert("Erro ao salvar o post. Veja o console para mais detalhes.");
+      alert("Erro ao salvar o produtor. Veja o console para mais detalhes.");
     } finally {
       setCarregando(false);
     }
   };
 
   const handleDescartar = () => {
-    setProduto({ nome: "", descricao: "", imagem: "" });
+    setProdutor({ nome: "", endereco: "", contato_whatsapp: "", contato_email: "", userId: "", biografia: "", foto_perfil: "" });
     setSalvo(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Limpar o input de arquivo
+    }
   };
 
   return (
     <div className="flex-1 bg-gray-100 min-h-screen flex justify-center items-start p-6 md:p-10">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow p-8">
-        <h1 className="text-2xl font-semibold mb-6">Cadastrar post</h1>
+        <h1 className="text-2xl font-semibold mb-6">Cadastrar Produtor</h1>
 
         <div className="bg-gray-200 rounded-xl p-6 space-y-6">
-          {/* Nome */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Título</label>
-            <input
-              type="text"
-              name="nome"
-              value={produto.nome}
-              onChange={handleChange}
-              placeholder="Digite o título do post"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
-          </div>
+          {/* Área da foto_perfil e ID */}
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+            {/* foto_perfil */}
+            <div
+              onClick={handleImageClick}
+              className="relative w-32 h-32 rounded-full bg-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-500 transition-colors flex-shrink-0"
+            >
+              {produtor.foto_perfil ? (
+                <Image
+                  src={produtor.foto_perfil}
+                  alt="foto_perfil do Produtor"
+                  fill
+                  className="object-cover rounded-full"
+                />
+              ) : (
+                <div className="flex flex-col items-center text-white">
+                  <Upload className="h-10 w-10 mb-1" />
+                  <Plus className="h-6 w-6" />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
 
-          {/* Imagem */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Imagem</label>
-            <div className="flex items-center space-x-4">
-              <div
-                onClick={handleImageClick}
-                className="relative w-28 h-28 bg-gray-400 rounded-xl flex items-center justify-center cursor-pointer hover:bg-gray-500 transition"
-              >
-                {produto.imagem ? (
-                  <Image
-                    src={produto.imagem}
-                    alt="Imagem do post"
-                    fill
-                    className="object-cover rounded-xl"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center text-white">
-                    <Upload className="h-8 w-8 mb-1" />
-                    <Plus className="h-5 w-5" />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleImageChange}
-                  className="hidden"
+            {/* Nome e ID - Ajustado para a direita da foto_perfil */}
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+              <div>
+                <Label htmlFor="nome" className="block text-sm font-medium mb-1">Nome</Label>
+                <Input
+                  id="nome"
+                  type="text"
+                  name="nome"
+                  value={produtor.nome}
+                  onChange={handleChange}
+                  placeholder="Nome do Produtor"
+                  className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+              <div>
+                <Label htmlFor="userId" className="block text-sm font-medium mb-1">ID (Preenchimento automático)</Label>
+                <Input
+                  id="userId"
+                  type="text"
+                  name="userId"
+                  value={produtor.userId}
+                  readOnly // ID geralmente não é editável na criação
+                  placeholder="Gerado automaticamente"
+                  className="w-full p-3 rounded-md border border-gray-300 bg-gray-100 cursor-not-allowed"
                 />
               </div>
             </div>
           </div>
 
-          {/* Descrição */}
+          {/* Contatos e Endereço */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="endereco" className="block text-sm font-medium mb-1">Endereço</Label>
+              <Input
+                id="endereco"
+                type="text"
+                name="endereco"
+                value={produtor.endereco}
+                onChange={handleChange}
+                placeholder="Endereço do Produtor"
+                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <Label htmlFor="contato_whatsapp" className="block text-sm font-medium mb-1">WhatsApp</Label>
+              <Input
+                id="contato_whatsapp"
+                type="text"
+                name="contato_whatsapp"
+                value={produtor.contato_whatsapp}
+                onChange={handleChange}
+                placeholder="Numero do WhatsApp"
+                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <Label htmlFor="contato_email" className="block text-sm font-medium mb-1">Email</Label>
+              <Input
+                id="contato_email"
+                type="email"
+                name="contato_email"
+                value={produtor.contato_email}
+                onChange={handleChange}
+                placeholder="Email para Contato"
+                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+
+          {/* Biografia */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Conteúdo do post
-            </label>
+            <Label htmlFor="biografia" className="block text-sm font-medium mb-1">Biografia</Label>
             <textarea
-              name="descricao"
-              value={produto.descricao}
+              id="biografia"
+              name="biografia"
+              value={produtor.biografia}
               onChange={handleChange}
-              placeholder="Digite o conteúdo..."
+              placeholder="Escreva a biografia do produtor..."
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
               rows={6}
             />
@@ -179,7 +274,7 @@ export default function CadastrarProdutoPage() {
             disabled={carregando}
             className="bg-amber-500 hover:bg-amber-600 text-white"
           >
-            {carregando ? "Salvando..." : "Salvar"}
+            {carregando ? "Salvando..." : "Cadastrar Produtor"}
           </Button>
         </div>
 
@@ -187,7 +282,7 @@ export default function CadastrarProdutoPage() {
         {salvo && (
           <div className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-lg flex items-center space-x-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
             <CheckCircle2 className="h-5 w-5" />
-            <span>Post cadastrado com sucesso!</span>
+            <span>Produtor cadastrado com sucesso!</span>
           </div>
         )}
       </div>
