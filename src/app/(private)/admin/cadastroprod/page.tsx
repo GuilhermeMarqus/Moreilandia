@@ -3,17 +3,19 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, CheckCircle2, PenLine, Trash2 } from "lucide-react"; // Adicionar PenLine e Trash2 para simular edição/exclusão (opcional)
+import { Plus, Upload, CheckCircle2 } from "lucide-react"; // Adicionar PenLine e Trash2 para simular edição/exclusão (opcional)
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation"; // Importar useRouter
+import { v4 as uuidv4 } from "uuid"; // Importar uuid para gerar IDs únicos
 
 interface ProdutorData {
+  id?: string; // ID do produtor (opcional, gerado pelo backend)
   nome: string;
   endereco: string;
   contato_whatsapp: string; // Alterado de 'telefone'
   contato_email: string; // Alterado de 'email'
-  userId: string; // Alterado de 'id'
+  userId: string; // ID do ADMIN que está cadastrando
   biografia: string;
   foto_perfil: string; // Alterado de 'imagem'
 }
@@ -29,6 +31,7 @@ export default function CadastrarProdutorPage() {
     foto_perfil: "",
   });
   const [salvo, setSalvo] = useState(false);
+  const [cadastradoId, setCadastradoId] = useState<string | null>(null); // Novo estado para o ID cadastrado
   const [carregando, setCarregando] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter(); // Inicializar useRouter
@@ -37,7 +40,6 @@ export default function CadastrarProdutorPage() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      // Defina o userId do produtor com base no usuário logado
       setProdutor((prev) => ({ ...prev, userId: user.id }));
     }
   }, []);
@@ -63,7 +65,7 @@ export default function CadastrarProdutorPage() {
   };
 
   const handleSalvar = async () => {
-    const token = localStorage.getItem('moreilandia.token');
+    const token = localStorage.getItem("moreilandia.token");
 
     if (!token) {
       alert("Você precisa estar logado para cadastrar um produtor");
@@ -71,17 +73,18 @@ export default function CadastrarProdutorPage() {
       return;
     }
 
-    if (!produtor.nome || !produtor.endereco || !produtor.contato_whatsapp || !produtor.contato_email || !produtor.biografia) {
+    if (
+      !produtor.nome ||
+      !produtor.endereco ||
+      !produtor.contato_whatsapp ||
+      !produtor.contato_email ||
+      !produtor.biografia
+    ) {
       alert("Preencha todos os campos obrigatórios antes de salvar.");
       return;
     }
 
     const file = fileInputRef.current?.files?.[0];
-
-    // if (!file) {
-    //   alert("Uma foto_perfil é obrigatória.");
-    //   return;
-    // }
 
     setCarregando(true);
 
@@ -91,23 +94,22 @@ export default function CadastrarProdutorPage() {
     formData.append("contato_whatsapp", produtor.contato_whatsapp);
     formData.append("email", produtor.contato_email); // Alterado para 'email'
     formData.append("biografia", produtor.biografia);
-    if (produtor.userId) {
-      formData.append("userId", produtor.userId); // Incluir o userId na requisição
-    }
+    formData.append("userId", produtor.userId);
+
     if (file) {
       formData.append("foto_perfil", file);
     }
 
     try {
       const response = await fetch(
-        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor", // Alterado para /api/usuario
+        "https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor", // URL para cadastrar produtor
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             // 'Content-Type': 'multipart/form-data', // Não defina manualmente, fetch faz isso automaticamente com FormData
           },
-          body: formData
+          body: formData,
         }
       );
 
@@ -118,11 +120,20 @@ export default function CadastrarProdutorPage() {
 
       const data = await response.json();
       console.log("Produtor cadastrado:", data);
+      setCadastradoId(data.id); // Armazenar o ID do produtor cadastrado
 
       setSalvo(true);
-      setProdutor({ nome: "", endereco: "", contato_whatsapp: "", contato_email: "", userId: "", biografia: "", foto_perfil: "" });
+      setProdutor({
+        nome: "",
+        endereco: "",
+        contato_whatsapp: "",
+        contato_email: "",
+        userId: "",
+        biografia: "",
+        foto_perfil: "",
+      }); // Restaurado userId
       if (fileInputRef.current) {
-        fileInputRef.current.value = ''; // Limpar o input de arquivo
+        fileInputRef.current.value = ""; // Limpar o input de arquivo
       }
       setTimeout(() => setSalvo(false), 3000);
     } catch (error) {
@@ -134,10 +145,18 @@ export default function CadastrarProdutorPage() {
   };
 
   const handleDescartar = () => {
-    setProdutor({ nome: "", endereco: "", contato_whatsapp: "", contato_email: "", userId: "", biografia: "", foto_perfil: "" });
+    setProdutor({
+      nome: "",
+      endereco: "",
+      contato_whatsapp: "",
+      contato_email: "",
+      userId: "",
+      biografia: "",
+      foto_perfil: "",
+    }); // Restaurado userId
     setSalvo(false);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Limpar o input de arquivo
+      fileInputRef.current.value = ""; // Limpar o input de arquivo
     }
   };
 
@@ -179,7 +198,12 @@ export default function CadastrarProdutorPage() {
             {/* Nome e ID - Ajustado para a direita da foto_perfil */}
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               <div>
-                <Label htmlFor="nome" className="block text-sm font-medium mb-1">Nome</Label>
+                <Label
+                  htmlFor="nome"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Nome
+                </Label>
                 <Input
                   id="nome"
                   type="text"
@@ -190,25 +214,19 @@ export default function CadastrarProdutorPage() {
                   className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
-              <div>
-                <Label htmlFor="userId" className="block text-sm font-medium mb-1">ID (Preenchimento automático)</Label>
-                <Input
-                  id="userId"
-                  type="text"
-                  name="userId"
-                  value={produtor.userId}
-                  readOnly // ID geralmente não é editável na criação
-                  placeholder="Gerado automaticamente"
-                  className="w-full p-3 rounded-md border border-gray-300 bg-gray-100 cursor-not-allowed"
-                />
-              </div>
+              {/* O campo ID/userId foi removido da renderização, pois será gerado/obtido automaticamente */}
             </div>
           </div>
 
           {/* Contatos e Endereço */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="endereco" className="block text-sm font-medium mb-1">Endereço</Label>
+              <Label
+                htmlFor="endereco"
+                className="block text-sm font-medium mb-1"
+              >
+                Endereço
+              </Label>
               <Input
                 id="endereco"
                 type="text"
@@ -220,7 +238,12 @@ export default function CadastrarProdutorPage() {
               />
             </div>
             <div>
-              <Label htmlFor="contato_whatsapp" className="block text-sm font-medium mb-1">WhatsApp</Label>
+              <Label
+                htmlFor="contato_whatsapp"
+                className="block text-sm font-medium mb-1"
+              >
+                WhatsApp
+              </Label>
               <Input
                 id="contato_whatsapp"
                 type="text"
@@ -232,7 +255,12 @@ export default function CadastrarProdutorPage() {
               />
             </div>
             <div>
-              <Label htmlFor="contato_email" className="block text-sm font-medium mb-1">Email</Label>
+              <Label
+                htmlFor="contato_email"
+                className="block text-sm font-medium mb-1"
+              >
+                Email
+              </Label>
               <Input
                 id="contato_email"
                 type="email"
@@ -247,7 +275,12 @@ export default function CadastrarProdutorPage() {
 
           {/* Biografia */}
           <div>
-            <Label htmlFor="biografia" className="block text-sm font-medium mb-1">Biografia</Label>
+            <Label
+              htmlFor="biografia"
+              className="block text-sm font-medium mb-1"
+            >
+              Biografia
+            </Label>
             <textarea
               id="biografia"
               name="biografia"
@@ -282,7 +315,7 @@ export default function CadastrarProdutorPage() {
         {salvo && (
           <div className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-lg flex items-center space-x-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
             <CheckCircle2 className="h-5 w-5" />
-            <span>Produtor cadastrado com sucesso!</span>
+            <span>Produtor cadastrado com sucesso! ID: {cadastradoId}</span>
           </div>
         )}
       </div>
