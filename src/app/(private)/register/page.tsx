@@ -23,10 +23,10 @@ const Register = () => {
 
   const handleRegister = async (data: any) => {
     try {
-      const response = await axios.post("https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario", {
-        nome: data.name,
+      await axios.post("https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario", {
+        nome: data.nome,
         email: data.email,
-        senha: data.password,
+        senha: data.senha,
         papel: data.papel, // Adiciona o campo ADMIN ou PRODUTOR
       });
 
@@ -37,7 +37,7 @@ const Register = () => {
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
         setError("email", { message: "Erro no registro. Tente novamente." });
-        setError("password", { message: "Erro no registro. Tente novamente." });
+        setError("senha", { message: "Erro no registro. Tente novamente." });
         console.error("Falha no registro:", error.response.data);
         alert(
           error.response.data.message ||
@@ -65,14 +65,14 @@ const Register = () => {
             <form onSubmit={handleSubmit(handleRegister)}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="name">Nome</Label>
+                  <Label htmlFor="nome">Nome</Label>
                   <Input
-                    id="name"
+                    id="nome"
                     type="text"
                     placeholder="Seu nome completo"
-                    {...register("name", { required: "Nome é obrigatório" })}
+                    {...register("nome", { required: "Nome é obrigatório" })}
                   />
-                  {errors.name && <p className="text-red-500 text-sm">{errors.name.message as string}</p>}
+                  {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message as string}</p>}
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -86,20 +86,20 @@ const Register = () => {
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Senha</Label>
+                    <Label htmlFor="senha">Senha</Label>
                   </div>
                   <Input
-                    id="password"
+                    id="senha"
                     type="password"
-                    {...register("password", { required: "Senha é obrigatória", minLength: { value: 6, message: "A senha deve ter no mínimo 6 caracteres" } })}
+                    {...register("senha", { required: "Senha é obrigatória", minLength: { value: 6, message: "A senha deve ter no mínimo 6 caracteres" } })}
                   />
-                  {errors.password && <p className="text-red-500 text-sm">{errors.password.message as string}</p>}
+                  {errors.senha && <p className="text-red-500 text-sm">{errors.senha.message as string}</p>}
                 </div>
                 {/* Novo campo para seleção de Papel */}
                 <div className="grid gap-2">
                   <Label htmlFor="papel">Papel</Label>
                   <Select onValueChange={(value: "ADMIN" | "PRODUTOR") => setValue("papel", value)}>
-                    <SelectTrigger className="w-full" {...register("papel", { required: "Papel é obrigatório" })}>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Selecione um papel" />
                     </SelectTrigger>
                     <SelectContent>

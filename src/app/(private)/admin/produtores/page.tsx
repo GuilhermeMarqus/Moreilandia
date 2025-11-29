@@ -44,6 +44,7 @@ export default function ProdutoresPage() {
         }
 
         const data: ProdutorData[] = await response.json();
+        console.log("Dados dos produtores recebidos da API:", data); // Adicionado para depuração
         // Não é mais necessário filtrar por papel, pois este endpoint retorna apenas produtores
         setProdutores(data);
       } catch (err: any) {

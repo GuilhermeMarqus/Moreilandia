@@ -36,13 +36,13 @@ export default function CadastrarProdutorPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter(); // Inicializar useRouter
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setProdutor((prev) => ({ ...prev, userId: user.id }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+  //   if (storedUser) {
+  //     const user = JSON.parse(storedUser);
+  //     setProdutor((prev) => ({ ...prev, userId: user.id }));
+  //   }
+  // }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

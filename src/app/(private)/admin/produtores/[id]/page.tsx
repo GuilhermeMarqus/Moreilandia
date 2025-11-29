@@ -17,14 +17,19 @@ interface ProdutorData {
   contato_email: string; // Alterado de 'email'
   userId: string; // ID do ADMIN que está cadastrando
   biografia: string;
+  foto_perfil_url?: string,
   foto_perfil: string; // Alterado de 'imagem'
 }
 
- export default function ProdutorPage() {
+interface ProdutorCardItemProps {
+  produtor: ProdutorData;
+}
+
+export default function ProdutorPage() {
   const routeParams = useParams();
   const { id } = routeParams;
 
-  const [produtor, setProdutor] = useState<ProdutorData | null>(null);
+  const [produtorData, setProdutorData] = useState<ProdutorData | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,22 +43,30 @@ interface ProdutorData {
         }
 
         console.log("ID do produtor recebido:", id);
+        console.log("Objeto routeParams completo:", routeParams);
 
-        const response = await fetch(
-          `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const apiUrl = `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor/${id}`;
+        console.log("URL da API construída:", apiUrl);
+
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
-          throw new Error(`Erro ao buscar produtor: ${response.statusText}`);
+          throw new Error(
+            `Erro ao buscar produtor: ${response.statusText}. ID usado: ${id}`
+          );
         }
 
         const data: ProdutorData = await response.json();
-        setProdutor(data);
+        if (!data || Object.keys(data).length === 0 || !data.id) {
+          setProdutorData(null);
+        } else {
+          setProdutorData(data);
+        }
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -62,6 +75,7 @@ interface ProdutorData {
     };
 
     if (id) {
+      console.log("Chamando fetchProdutor com ID:", id, "Tipo:", typeof id);
       fetchProdutor();
     }
   }, [id]);
@@ -71,27 +85,31 @@ interface ProdutorData {
   }
 
   if (error) {
-    return <div className="flex-1 p-6 bg-gray-100 text-red-600">Erro: {error}</div>;
+    return (
+      <div className="flex-1 p-6 bg-gray-100 text-red-600">Erro: {error}</div>
+    );
   }
 
-  if (!produtor) {
+  if (!produtorData) {
     return notFound();
   }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProdutor({ ...produtor, [e.target.name]: e.target.value });
+    setProdutorData({ ...produtorData, [e.target.name]: e.target.value });
   };
 
   const handleEditToggle = () => {
     if (isEditing) {
-      console.log("Salvando dados atualizados:", produtor);
+      console.log("Salvando dados atualizados:", produtorData);
       // Aqui você enviaria os dados 'produtor' para a sua API de atualização.
       // Ex: axios.put(`/api/produtores/${produtor.id}`, produtor);
     }
     setIsEditing(!isEditing);
   };
+
+  const [imageError, setImageError] = useState(false);
 
   return (
     <>
@@ -110,11 +128,12 @@ interface ProdutorData {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col items-center justify-center p-4">
               <Image
-                src={produtor.foto_perfil}
+                src={imageError ? "/UserIcon.svg" : encodeURI(produtorData.foto_perfil_url || "/UserIcon.svg")}
                 alt="Produtor"
                 width={150}
                 height={150}
                 className="rounded-full object-cover mb-4"
+                onError={() => setImageError(true)}
               />
             </div>
             <div>
@@ -124,21 +143,21 @@ interface ProdutorData {
                   <>
                     <input
                       name="nome"
-                      value={produtor.nome}
+                      value={produtorData.nome}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full mb-2"
                     />
                     <input
                       name="endereco"
-                      value={produtor.endereco}
+                      value={produtorData.endereco}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full"
                     />
                   </>
                 ) : (
                   <>
-                    <p>{produtor.nome}</p>
-                    <p>{produtor.endereco}</p>
+                    <p>{produtorData.nome}</p>
+                    <p>{produtorData.endereco}</p>
                   </>
                 )}
               </div>
@@ -148,27 +167,27 @@ interface ProdutorData {
                   <>
                     <input
                       name="contato_whatsapp"
-                      value={produtor.contato_whatsapp}
+                      value={produtorData.contato_whatsapp}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full mb-2"
                     />
                     <input
                       name="contato_email"
-                      value={produtor.contato_email}
+                      value={produtorData.contato_email}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full"
                     />
                   </>
                 ) : (
                   <>
-                    <p>{produtor.contato_whatsapp}</p>
-                    <p>{produtor.contato_email}</p>
+                    <p>{produtorData.contato_whatsapp}</p>
+                    <p>{produtorData.contato_email}</p>
                   </>
                 )}
               </div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">ID</h2>
-                <p>{produtor.id}</p>
+                <p>{produtorData.id}</p>
               </div>
             </div>
           </div>
@@ -177,13 +196,13 @@ interface ProdutorData {
             {isEditing ? (
               <textarea
                 name="biografia"
-                value={produtor.biografia}
+                value={produtorData.biografia}
                 onChange={handleChange}
                 className="border rounded-md p-2 w-full"
                 rows={5}
               />
             ) : (
-              <p>{produtor.biografia}</p>
+              <p>{produtorData.biografia}</p>
             )}
           </div>
         </Card>
@@ -214,17 +233,6 @@ interface ProdutorData {
           ))}
         </div>
       </div>
-
-      <style>{`
-        /* Oculta a Navbar */
-        .fixed {
-          display: none !important;
-        }
-        /* Oculta o Footer */
-        footer {
-          display: none !important;
-        }
-      `}</style>
     </>
   );
 }
