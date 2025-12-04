@@ -126,7 +126,7 @@ export default function CadastrarProdutorPage() {
     formData.append("contato_whatsapp", produtor.contato_whatsapp);
     formData.append("email", produtor.contato_email); // Alterado para 'email'
     formData.append("biografia", produtor.biografia);
-    // formData.append("userId", produtor.userId); // userId agora vai na URL
+    formData.append("userId", produtor.userId); // 
 
     if (file) {
       formData.append("foto_perfil", file);

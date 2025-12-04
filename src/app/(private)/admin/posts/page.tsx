@@ -2,44 +2,65 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import axios from "axios"; // Importar axios
 
-const postsData = [
-  {
-    id: 1,
-    nome: "Post 1",
-    descricao: "Descrição breve do post 1.",
-    imagem: "/ImageIcon.svg",
-  },
-  {
-    id: 2,
-    nome: "Post 2",
-    descricao: "Descrição breve do post 2.",
-    imagem: "/ImageIcon.svg",
-  },
-  {
-    id: 3,
-    nome: "Post 3",
-    descricao: "Descrição breve do post 3.",
-    imagem: "/ImageIcon.svg",
-  },
-  {
-    id: 4,
-    nome: "Post 4",
-    descricao: "Descrição breve do post 4.",
-    imagem: "/ImageIcon.svg",
-  },
-];
+interface PostData {
+  id: number;
+  titulo: string;
+  conteudo: string;
+  banner: string; // Nome do arquivo do banner
+  autorId: number;
+  data_publicacao: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function PostsPage() {
   const [search, setSearch] = useState("");
   const router = useRouter();
+  const [posts, setPosts] = useState<PostData[]>([]); // Estado para armazenar os posts
+  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [error, setError] = useState<string | null>(null); // Estado para erros
 
-  const filteredPosts = postsData.filter((post) =>
-    post.nome.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("moreilandia.token");
+
+      if (!token) {
+        setError("Token de autenticação não encontrado.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "https://extensao-8-semestre-si-2025-2.onrender.com/api/postagem",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPosts(response.data);
+      } catch (err) {
+        console.error("Erro ao buscar posts:", err);
+        setError("Erro ao carregar os posts.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = posts.filter((post) =>
+    post.titulo.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -60,9 +81,16 @@ export default function PostsPage() {
         </div>
       </div>
 
+      {loading && <p className="text-center text-gray-600">Carregando posts...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {!loading && !error && filteredPosts.length === 0 && (
+        <p className="text-center text-gray-600">Nenhum post encontrado.</p>
+      )}
+
       {/* Cards dos posts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-        {filteredPosts.map((post) => (
+        {!loading && !error && filteredPosts.map((post) => (
           <div
             key={post.id}
             className="bg-gray-100 w-64 h-80 rounded-xl shadow-md flex flex-col items-center justify-between p-4 relative hover:shadow-lg transition"
@@ -70,8 +98,8 @@ export default function PostsPage() {
             {/* Imagem */}
             <div className="relative w-32 h-32 mb-3">
               <Image
-                src={post.imagem}
-                alt={post.nome}
+                src={`https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${post.banner}`}
+                alt={post.titulo}
                 fill
                 className="object-cover rounded-md"
               />
@@ -79,8 +107,8 @@ export default function PostsPage() {
 
             {/* Conteúdo */}
             <div className="text-center">
-              <h2 className="font-semibold">{post.nome}</h2>
-              <p className="text-sm text-gray-700 mt-1">{post.descricao}</p>
+              <h2 className="font-semibold">{post.titulo}</h2>
+              <p className="text-sm text-gray-700 mt-1">{post.conteudo}</p>
             </div>
 
             {/* Ações */}

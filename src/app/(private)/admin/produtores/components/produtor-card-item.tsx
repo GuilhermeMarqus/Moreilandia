@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 export interface ProdutorData {
   id: string;
   nome: string;
-  endereco: string;
   contato_whatsapp: string;
   contato_email: string | null;
   biografia: string;
@@ -40,7 +39,7 @@ export default function ProdutorCardItem({ produtor }: ProdutorCardItemProps) {
         <div className="grid grid-cols-3 gap-4 items-center py-2 px-4 rounded-md bg-gray-100 mb-2">
           <div className="flex items-center space-x-3">
             <Image
-              src={imageError ? "/UserIcon.svg" : encodeURI(produtor.foto_perfil_url || "/UserIcon.svg")}
+              src={imageError ? "/UserIcon.svg" : produtor.foto_perfil_url ? produtor.foto_perfil_url : `https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${encodeURIComponent(produtor.foto_perfil)}`}
               alt={produtor.nome}
               width={40}
               height={40}
