@@ -108,7 +108,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <div className=" rounded-2xl w-full h-auto flex flex-col items-center py-8 px-4" >
+      <div id="#postagens" className=" rounded-2xl w-full h-auto flex flex-col items-center py-8 px-4" >
         <div className="mt-2 md:mt-2">
           <Title
             before={""}
@@ -146,7 +146,7 @@ export default function Home() {
         <div className="pt-6 md:pt-35">
           <Button
             className="bg-[#742406] hover:bg-[#451706] text-[18px] p-4"
-            onClick={() => router.push("./historia")}
+            onClick={() => router.push("./posts")}
           >
             Veja Mais
           </Button>
