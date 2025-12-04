@@ -3,39 +3,41 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, CheckCircle2 } from "lucide-react"; // Adicionar PenLine e Trash2 para simular edição/exclusão (opcional)
+import { Plus, Upload, CheckCircle2, User } from "lucide-react"; // Adicionar PenLine e Trash2 para simular edição/exclusão (opcional)
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation"; // Importar useRouter
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+} from "@/components/ui/select";
 import axios from "axios"; // Importar axios
-
-interface NewUserData {
-  nome: string;
-  email: string;
-  senha: string;
-  papel: "PRODUTOR";
-}
 
 interface ProdutorData {
   id?: string; // ID do produtor (opcional, gerado pelo backend)
-  contato_whatsapp: string;
-  contato_email: string;
-  userId: string; // ID do usuário que é o produtor (não opcional)
+  contato_whatsapp: string; // Alterado de 'telefone'
+  contato_email: string; // Alterado de 'email'
+  userId: string; // ID do ADMIN que está cadastrando
   biografia: string;
-  foto_perfil: string;
+  foto_perfil: string; // Alterado de 'imagem'
+}
+
+interface UserData {
+  id: string;
+  nome: string;
+  papel: string; // Corrigido de 'perfil' para 'papel'
 }
 
 export default function CadastrarProdutorPage() {
-  const [newProducerData, setNewProducerData] = useState<
-    NewUserData & ProdutorData
-  >({
-    nome: "",
-    email: "",
-    senha: "",
-    papel: "PRODUTOR", // Define o papel como PRODUTOR por padrão
+  const [produtor, setProdutor] = useState<ProdutorData>({
     contato_whatsapp: "",
     contato_email: "",
-    userId: "", // Será preenchido após a criação do usuário
+    userId: "",
     biografia: "",
     foto_perfil: "",
   });
@@ -44,11 +46,43 @@ export default function CadastrarProdutorPage() {
   const [carregando, setCarregando] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter(); // Inicializar useRouter
+  const [users, setUsers] = useState<UserData[]>([]); // Novo estado para armazenar usuários
+  const [loadingUsers, setLoadingUsers] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      const token = localStorage.getItem("moreilandia.token");
+      if (!token) {
+        console.error("Token de autenticação não encontrado.");
+        setLoadingUsers(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setNewProducerData({ ...newProducerData, [e.target.name]: e.target.value });
+    setProdutor({ ...produtor, [e.target.name]: e.target.value });
     setSalvo(false);
   };
 
@@ -56,7 +90,7 @@ export default function CadastrarProdutorPage() {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setNewProducerData({ ...newProducerData, foto_perfil: imageUrl });
+      setProdutor({ ...produtor, foto_perfil: imageUrl });
       setSalvo(false);
     }
   };
@@ -69,142 +103,88 @@ export default function CadastrarProdutorPage() {
     const token = localStorage.getItem("moreilandia.token");
 
     if (!token) {
-      alert("Você precisa estar logado para cadastrar um produtor.");
+      alert("Você precisa estar logado para cadastrar um produtor");
       setCarregando(false);
       return;
     }
 
     if (
-      !newProducerData.nome ||
-      !newProducerData.email ||
-      !newProducerData.senha ||
-      !newProducerData.contato_whatsapp ||
-      !newProducerData.contato_email ||
-      !newProducerData.biografia
+      !produtor.contato_whatsapp ||
+      !produtor.contato_email ||
+      !produtor.biografia ||
+      !produtor.userId // Validar se um usuário foi selecionado
     ) {
-      alert("Preencha todos os campos obrigatórios.");
+      alert("Preencha todos os campos obrigatórios e selecione um usuário.");
       return;
     }
 
     const file = fileInputRef.current?.files?.[0];
 
-    if (!file) {
-      alert("Por favor, selecione uma imagem de perfil para o produtor.");
-      setCarregando(false);
-      return;
-    }
-
     setCarregando(true);
 
+    const formData = new FormData();
+    formData.append("contato_whatsapp", produtor.contato_whatsapp);
+    formData.append("email", produtor.contato_email); // Alterado para 'email'
+    formData.append("biografia", produtor.biografia);
+    // formData.append("userId", produtor.userId); // userId agora vai na URL
+
+    if (file) {
+      formData.append("foto_perfil", file);
+    }
+
     try {
-      // 1. Criar o usuário PRODUTOR
-      const userResponse = await axios.post(
-        "https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario",
-        {
-          nome: newProducerData.nome,
-          email: newProducerData.email,
-          senha: newProducerData.senha,
-          papel: "PRODUTOR",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const userId = userResponse.data.id; // Supondo que o ID do usuário criado seja retornado como 'id'
-      console.log("UserID obtido da criação do usuário (para produtor):", userId); // Log para depuração
-
-      // 2. Criar o perfil do produtor, vinculando ao userId recém-criado
-      const formData = new FormData();
-      formData.append("biografia", newProducerData.biografia);
-      formData.append("contato_whatsapp", newProducerData.contato_whatsapp);
-      formData.append("contato_email", newProducerData.contato_email);
-      if (file) {
-        formData.append("foto_perfil", file);
-      }
-
-      console.log("Conteúdo do FormData para o perfil do produtor:"); // Log para depuração
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
-
-      const produtorResponse = await axios.post(
-        `https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario/${userId}/produtor`,
+      const response = await axios.post(
+        `https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario/${produtor.userId}/produtor`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            // 'Content-Type': 'multipart/form-data', // Axios define isso automaticamente
           },
         }
       );
 
-      if (
-        !produtorResponse.status ||
-        produtorResponse.status < 200 ||
-        produtorResponse.status >= 300
-      ) {
-        let errorData: any = produtorResponse.data;
-        throw new Error(
-          `Erro ao cadastrar perfil do produtor: ${
-            produtorResponse.status || "N/A"
-          } - ${
-            typeof errorData === "object" ? JSON.stringify(errorData) : errorData
-          }`
-        );
-      }
+      const data = response.data;
+      console.log("Produtor cadastrado:", data);
+      setCadastradoId(data.id); // Armazenar o ID do produtor cadastrado
 
       setSalvo(true);
-      setNewProducerData({
-        nome: "",
-        email: "",
-        senha: "",
-        papel: "PRODUTOR",
+      setProdutor({
         contato_whatsapp: "",
         contato_email: "",
         userId: "",
         biografia: "",
         foto_perfil: "",
-      });
+      }); // Limpar o estado, incluindo userId
       if (fileInputRef.current) {
         fileInputRef.current.value = ""; // Limpar o input de arquivo
       }
       setTimeout(() => setSalvo(false), 3000);
-    } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error("Erro da API (Axios):", error.response.data);
-        console.error("Status do erro (Axios):", error.response.status);
-        const errorMessage = typeof error.response.data === 'object' && error.response.data !== null
-          ? JSON.stringify(error.response.data)
-          : error.response.data || error.message;
-        alert(`Erro: ${error.response.status} - ${errorMessage}`);
-      } else {
-        console.error("Erro desconhecido:", error);
-        alert(error.message || "Erro ao salvar o produtor.");
-      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao salvar o produtor. Veja o console para mais detalhes.");
     } finally {
       setCarregando(false);
     }
   };
 
   const handleDescartar = () => {
-    setNewProducerData({
-      nome: "",
-      email: "",
-      senha: "",
-      papel: "PRODUTOR",
+    setProdutor({
       contato_whatsapp: "",
       contato_email: "",
       userId: "",
       biografia: "",
       foto_perfil: "",
-    });
+    }); // Limpar o estado, incluindo userId
     setSalvo(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Limpar o input de arquivo
     }
+  };
+
+  const handleUserSelect = (value: string) => {
+    setProdutor((prev) => ({ ...prev, userId: value }));
+    setSalvo(false);
   };
 
   return (
@@ -213,16 +193,16 @@ export default function CadastrarProdutorPage() {
         <h1 className="text-2xl font-semibold mb-6">Cadastrar Produtor</h1>
 
         <div className="bg-gray-200 rounded-xl p-6 space-y-6">
-          {/* Área da foto_perfil e ID */}
+          {/* Área da foto_perfil e Seleção de Usuário */}
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             {/* foto_perfil */}
             <div
               onClick={handleImageClick}
               className="relative w-32 h-32 rounded-full bg-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-500 transition-colors flex-shrink-0"
             >
-              {newProducerData.foto_perfil ? (
+              {produtor.foto_perfil ? (
                 <Image
-                  src={newProducerData.foto_perfil}
+                  src={produtor.foto_perfil}
                   alt="foto_perfil do Produtor"
                   fill
                   className="object-cover rounded-full"
@@ -242,54 +222,34 @@ export default function CadastrarProdutorPage() {
               />
             </div>
 
-            {/* Campos de Nome, Email e Senha */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {/* Seleção de Usuário Produtor */}
+            <div className="flex-1 grid grid-cols-1 gap-4 w-full">
               <div>
-                <Label htmlFor="nome" className="block text-sm font-medium mb-1">
-                  Nome
+                <Label htmlFor="userId" className="block text-sm font-medium mb-1">
+                  Selecionar Usuário Produtor
                 </Label>
-                <Input
-                  id="nome"
-                  type="text"
-                  name="nome"
-                  value={newProducerData.nome}
-                  onChange={handleChange}
-                  placeholder="Nome Completo"
-                  className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-              </div>
-              <div>
-                <Label htmlFor="email" className="block text-sm font-medium mb-1">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={newProducerData.email}
-                  onChange={handleChange}
-                  placeholder="email@exemplo.com"
-                  className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-              </div>
-              <div>
-                <Label htmlFor="senha" className="block text-sm font-medium mb-1">
-                  Senha
-                </Label>
-                <Input
-                  id="senha"
-                  type="password"
-                  name="senha"
-                  value={newProducerData.senha}
-                  onChange={handleChange}
-                  placeholder="********"
-                  className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
+                <Select onValueChange={handleUserSelect} value={produtor.userId}>
+                  <SelectTrigger className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <SelectValue placeholder={loadingUsers ? "Carregando usuários..." : "Selecione um usuário"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Usuários Produtores</SelectLabel>
+                      {users
+                        .filter((user) => user.papel === "PRODUTOR") // Corrigido de 'perfil' para 'papel'
+                        .map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            ID: {user.id} | Nome: {user.nome}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
 
-          {/* Contatos e Endereço */}
+          {/* Contatos */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label
@@ -302,7 +262,7 @@ export default function CadastrarProdutorPage() {
                 id="contato_whatsapp"
                 type="text"
                 name="contato_whatsapp"
-                value={newProducerData.contato_whatsapp}
+                value={produtor.contato_whatsapp}
                 onChange={handleChange}
                 placeholder="Numero do WhatsApp"
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -319,7 +279,7 @@ export default function CadastrarProdutorPage() {
                 id="contato_email"
                 type="email"
                 name="contato_email"
-                value={newProducerData.contato_email}
+                value={produtor.contato_email}
                 onChange={handleChange}
                 placeholder="Email para Contato"
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -338,7 +298,7 @@ export default function CadastrarProdutorPage() {
             <textarea
               id="biografia"
               name="biografia"
-              value={newProducerData.biografia}
+              value={produtor.biografia}
               onChange={handleChange}
               placeholder="Escreva a biografia do produtor..."
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
