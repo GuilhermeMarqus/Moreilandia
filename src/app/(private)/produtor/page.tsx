@@ -7,60 +7,81 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react"; // Importar useState e useEffect
+import axios from "axios"; // Importar axios
 
-const produtos = [
-  {
-    id: 1,
-    imageSrc: "/foto-produto.svg", // Substitua com o caminho real da imagem
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 2,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 3,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 4,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 5,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 6,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 7,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-  {
-    id: 8,
-    imageSrc: "/ImageIcon.svg",
-    title: "Cilindro alveolador doméstico",
-    status: "Estado de novo",
-  },
-];
+// Interface para os dados do produto
+interface ProdutoData {
+  id: number;
+  nome: string;
+  descricao: string;
+  foto_produto: string; // Nome do arquivo da imagem
+  produtorId: number;
+  createdAt: string;
+  updatedAt: string;
+  foto_produto_url?: string; // Se a API retornar a URL completa diretamente
+}
 
 export default function ProdutorPage() {
   const router = useRouter();
+  const [produtos, setProdutos] = useState<ProdutoData[]>([]); // Estado para armazenar os produtos
+  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [error, setError] = useState<string | null>(null); // Estado para erros
+  const [search, setSearch] = useState(""); // Estado para a busca
+
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem('moreilandia.token');
+
+      if (!token) {
+        setError("Token de autenticação não encontrado. Faça login novamente.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "https://extensao-8-semestre-si-2025-2.onrender.com/api/produto",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setProdutos(response.data);
+      } catch (err: any) {
+        console.error("Erro ao buscar produtos:", err);
+        setError(err.response?.data?.message || "Erro desconhecido ao buscar produtos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProdutos();
+  }, []);
+
+  const filteredProdutos = produtos.filter((produto) =>
+    produto.nome.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-1 p-8 bg-gray-100 min-h-screen flex items-center justify-center">
+        <p>Carregando produtos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 p-8 bg-gray-100 min-h-screen flex items-center justify-center text-red-600">
+        <p>Erro: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-center w-auto">
@@ -68,11 +89,19 @@ export default function ProdutorPage() {
       </div>
       <div className="relative mb-6 w-full max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <Input placeholder="Buscar" className="pl-10 w-full" />
+        <Input 
+          placeholder="Buscar" 
+          className="pl-10 w-full" 
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
       <div>
-        {produtos.map((Produtos) => (
-          <Card key={Produtos.id} className="mb-6">
+        {!loading && !error && filteredProdutos.length === 0 && (
+          <p className="text-center text-gray-600">Nenhum produto encontrado.</p>
+        )}
+        {!loading && !error && filteredProdutos.map((produto) => (
+          <Card key={produto.id} className="mb-6">
             <CardHeader>
               <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
                 <div>Nome</div>
@@ -82,14 +111,23 @@ export default function ProdutorPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4 items-center py-2 px-4 rounded-md bg-gray-100 mb-2">
-                <div>{Produtos.title}</div>
-                <div>{Produtos.id}</div>
+                <div className="flex items-center space-x-3">
+                  <Image
+                    src={produto.foto_produto_url || `https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${encodeURIComponent(produto.foto_produto)}`}
+                    alt={produto.nome}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
+                  <span>{produto.nome}</span>
+                </div>
+                <div>{produto.id}</div>
                 <div className="flex justify-end space-x-2">
                   <Button
                     variant="ghost"
                     size="icon"
                     className="cursor-pointer"
-                    onClick={() => router.push(`/produtor/${Produtos.id}`)}
+                    onClick={() => router.push(`/produtor/cadastroprod/${produto.id}`)}
                   >
                     <PenLine className="h-4 w-4 cursor-pointer" />
                   </Button>
@@ -98,13 +136,12 @@ export default function ProdutorPage() {
                   </Button>
                 </div>
               </div>
-              {/* Mais produtores podem ser adicionados aqui */}
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="flex justify-center space-x-4">
+      <div className="flex justify-center space-x-4 mt-6">
         <Button
           variant="outline"
           onClick={() => router.push(`/produtor/cadastroprod`)}
@@ -112,16 +149,6 @@ export default function ProdutorPage() {
           Cadastrar
         </Button>
       </div>
-      <style>{`
-        /* Oculta a Navbar */
-        .fixed {
-          display: none !important;
-        }
-        /* Oculta o Footer */
-        footer {
-          display: none !important;
-        }
-      `}</style>
     </>
   );
 }
