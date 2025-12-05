@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { MoveDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Footer from "./components/footer";
+import PostList from "./(rotas)/posts/components/post_list";
 
 export default function Home() {
   const router = useRouter();
@@ -117,31 +118,8 @@ export default function Home() {
             yellow={""}
           />
         </div>
-        <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-40 pt-3 md:pt-35">
-          <Cartao
-            title={"Lorem ips un dolor"}
-            description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
-            }
-            titleColor="#fafbfb"
-            descriptionColor="#742406"
-          />
-          <Cartao
-            title={"Lorem ips un dolor"}
-            description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
-            }
-            titleColor="#fafbfb"
-            descriptionColor="#742406"
-          />
-          <Cartao
-            title={"Lorem ips un dolor"}
-            description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
-            }
-            titleColor="#fafbfb"
-            descriptionColor="#742406"
-          />
+        <div className="flex md:flex-row items-center md:justify-center gap-8 md:gap-40 pt-3 md:pt-35">
+         <PostList/>
         </div>
         <div className="pt-6 md:pt-35">
           <Button
