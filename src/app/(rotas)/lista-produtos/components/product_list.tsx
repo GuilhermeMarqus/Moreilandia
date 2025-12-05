@@ -48,6 +48,7 @@ const ProductList = () => {
       {products.map((product) => (
         <ProductCard
           key={product.id}
+          id={product.id}
           imageSrc={`https://extensao-8-semestre-si-2025-2.onrender.com/uploads/${product.foto_produto}`}
           title={product.nome}
           description={product.descricao}
