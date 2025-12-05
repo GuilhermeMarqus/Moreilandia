@@ -9,7 +9,7 @@ interface ProductCardProps {
   imageSrc?: string;
   title: string;
   description: string;
-  status?: string;
+  created?: string;
 }
 
 //colocar para ser puxado por ID
@@ -18,7 +18,7 @@ export default function ProductCard({
   imageSrc,
   title,
   description,
-  status,
+  created,
 }: ProductCardProps) {
 
 const router = useRouter();
@@ -40,9 +40,9 @@ const router = useRouter();
       </div>
       <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
       <p className="text-gray-600 text-sm mb-4 flex-grow text-wrap">{description}</p>
-      {status && (
+      {created && (
         <p className="text-gray-500 text-xs mb-4">
-          Usado - <span className="font-semibold">{status}</span>
+          Publicado em - <span className="font-semibold">{new Date(created).toLocaleDateString()} {new Date(created).toLocaleTimeString()}</span>
         </p>
       )}
       <div className="flex items-center justify-center gap-2 mt-auto">
