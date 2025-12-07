@@ -66,7 +66,7 @@ const ProdutoresList = () => {
               <h2 className="text-xl font-bold">{produtor.nome}</h2>
               <p className="text-gray-600">{produtor.biografia}</p>
               <p className="text-sm text-gray-500">
-                Membro desde {new Date(produtor.createdAt).toLocaleDateString(`month`)}
+                Membro desde {new Date(produtor.createdAt).getFullYear()}
               </p>
             </div>
           </div>
