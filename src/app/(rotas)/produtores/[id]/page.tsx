@@ -19,8 +19,6 @@ interface Produtor {
   createdAt: string;
   updatedAt: string;
   foto_perfil_url: string;
-  // Adicione a tipagem para a lista de produtos, se ela vier junto com os dados do produtor
-  products?: Product[]; // Opcional, se a API retornar os produtos associados
 }
 
 interface Product {
@@ -38,26 +36,35 @@ export default function ProdutorPage() {
   const produtorId = Number(params.id);
 
   const [produtor, setProdutor] = useState<Produtor | null>(null);
+  const [produtorProducts, setProdutorProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProdutor = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
+        // Fetch Produtor details
+        const produtorResponse = await axios.get(
           `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor/${produtorId}`
         );
-        setProdutor(response.data);
+        setProdutor(produtorResponse.data);
+
+        // Fetch Produtor's Products
+        const productsResponse = await axios.get(
+          `https://extensao-8-semestre-si-2025-2.onrender.com/api/produto?produtorId=${produtorId}`
+        );
+        setProdutorProducts(productsResponse.data);
+
       } catch (err) {
-        setError("Erro ao carregar o produtor.");
-        console.error("Erro ao buscar produtor:", err);
+        setError("Erro ao carregar os dados do produtor e seus produtos.");
+        console.error("Erro ao buscar dados do produtor:", err);
       } finally {
         setLoading(false);
       }
     };
 
     if (!isNaN(produtorId)) {
-      fetchProdutor();
+      fetchData();
     } else {
       setLoading(false);
       setError("ID do produtor inválido.");
@@ -65,7 +72,7 @@ export default function ProdutorPage() {
   }, [produtorId]);
 
   if (loading) {
-    return <div className="text-center text-amber-600">Carregando produtor...</div>;
+    return <div className="text-center text-amber-600">Carregando produtor e produtos...</div>;
   }
 
   if (error) {
@@ -103,26 +110,24 @@ export default function ProdutorPage() {
           <p className="text-gray-500 text-sm">
             Membro desde {new Date(produtor.createdAt).toLocaleDateString()}
           </p>
-          {/* A API não retorna o número de produtos diretamente aqui, então removi. */}
-          {/* Se a API for atualizada, podemos adicionar novamente. */}
-          {/* <p>
-            <strong>Produtos cadastrados:</strong> {produtor.products?.length || 0}
-          </p> */}
+          <p>
+            <strong>Produtos cadastrados:</strong> {produtorProducts.length || 0}
+          </p>
           <article className="flex flex-col items-start">
             <h1 className="text-xl font-bold">Biografia:</h1>
             <p className="text-[16px] text-wrap text-left">{produtor.biografia}</p>
           </article>
         </div>
       </div>
-      {produtor.products && produtor.products.length > 0 && (
+      {produtorProducts.length > 0 && (
         <section className="w-full flex flex-col items-center mt-10">
-          <h2 className="text-3xl font-bold mb-6">Produtos do Produtor</h2>
+          <h2 className="text-3xl font-bold mb-6">Produtos</h2>
           <div className="max-w-230 w-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {produtor.products.map((product) => (
+            {produtorProducts.map((product) => (
               <ProductCard
                 id={product.id}
                 key={product.id}
-                imageSrc={`https://extensao-8-semestre-si-2025-2.onrender.com/uploads/${product.foto_produto}`}
+                imageSrc={`https://extensao-8-semestre-si-2025-2.onrender.com/files/${product.foto_produto}`}
                 title={product.nome}
                 description={product.descricao}
                 created={product.createdAt}
