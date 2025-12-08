@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import ProductCard from "@/app/(rotas)/lista-produtos/components/product-card";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
 
 interface Produtor {
