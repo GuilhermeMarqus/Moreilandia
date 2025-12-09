@@ -195,10 +195,9 @@ export default function Home() {
               </CardHeader>
               <CardContent className="p-0">
                 <p className="text-sm md:text-base text-[#742406] mb-2 md:mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
+                  O mel ajuda a suavizar a mucosa e reduzir a irritação, sendo usado em xaropes e chás, 
+                  combate bactérias que podem causar infecções respiratórias,
+                  pode auxiliar no equilíbrio da flora intestinal e reduzir sintomas de indigestão...
                 </p>
                 <Dialog>
                   <DialogTrigger className="text-[#f6a51e] hover:underline p-0 pb-2 text-sm md:text-base">
@@ -207,13 +206,13 @@ export default function Home() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle className="text-[#742406]">
-                        Benefícios do Mel para a Saúde
+                        Benefícios do Mel para a saúde respiratória e digestiva
                       </DialogTitle>
                       <DialogDescription className="text-[#742406]">
-                        Este é o conteúdo expandido sobre os benefícios do mel
-                        para a saúde. Inclui informações detalhadas sobre
-                        propriedades antibacterianas, antioxidantes e
-                        anti-inflamatórias.
+                        O mel ajuda a suavizar a mucosa e reduzir a irritação, sendo usado em xaropes e chás, 
+                        combate bactérias que podem causar infecções respiratórias,
+                        pode auxiliar no equilíbrio da flora intestinal e reduzir sintomas de indigestão e 
+                        estimula o crescimento de bactérias benéficas no intestino.
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
@@ -225,15 +224,13 @@ export default function Home() {
               <CardHeader className="p-0 mb-2 md:mb-4">
                 <CardTitle className="flex items-center text-lg md:text-xl font-bold text-[#f6a51e]">
                   <span className="w-2 h-2 md:w-3 md:h-3 bg-[#0B97E4] rounded-full mr-2 md:mr-3"></span>{" "}
-                  Sabor
+                  Beleza e Bem-Estar
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <p className="text-sm md:text-base text-[#742406] mb-2 md:mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
+                  O mel podendo ser usado para hidratação da pele como em máscaras faciais,
+                  ajuda a manter a pele macia e saudável...
                 </p>
                 <Dialog>
                   <DialogTrigger className="text-[#f6a51e] hover:underline p-0 pb-2 text-sm md:text-base">
@@ -242,13 +239,13 @@ export default function Home() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle className="text-[#742406]">
-                        O Sabor Único do Mel de Moreilandia
+                        Beleza e Bem-Estar
                       </DialogTitle>
                       <DialogDescription className="text-[#742406]">
-                        Aqui está o conteúdo expandido sobre o sabor único do
-                        mel de Moreilandia. Explore as notas de floração, a
-                        doçura e as características regionais que tornam este
-                        mel especial.
+                        Para a hidratação da pele, pode ser usado em máscaras faciais, 
+                        ajudando a manter a pele macia e saudável, e também para o controle de glicemia,
+                        Embora seja doce, estudos indicam que pode ter efeito mais equilibrado no açúcar 
+                        no sangue em comparação ao açúcar refinado.
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
@@ -260,15 +257,13 @@ export default function Home() {
               <CardHeader className="p-0 mb-2 md:mb-4">
                 <CardTitle className="flex items-center text-lg md:text-xl font-bold text-[#f6a51e]">
                   <span className="w-2 h-2 md:w-3 md:h-3 bg-[#0B97E4] rounded-full mr-2 md:mr-3"></span>{" "}
-                  Flora
+                  Cicatrização e Imunidade
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <p className="text-sm md:text-base text-[#742406] mb-2 md:mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
+                  Para o tratamento de feridas e queimaduras leves aplicado topicamente, 
+                  acelera a cicatrização devido às suas propriedades antibacterianas...
                 </p>
                 <Dialog>
                   <DialogTrigger className="text-[#f6a51e] hover:underline p-0 pb-2 text-sm md:text-base">
@@ -277,12 +272,13 @@ export default function Home() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle className="text-[#742406]">
-                        A Rica Flora de Moreilandia
+                        O tratamento de feridas através do mel
                       </DialogTitle>
                       <DialogDescription className="text-[#742406]">
-                        Conteúdo expandido sobre a rica flora de Moreilandia que
-                        contribui para a qualidade do mel. Detalhes sobre as
-                        flores e plantas nativas que as abelhas visitam.
+                        Favorecendo o tratamento de feridas e queimaduras leves aplicado topicamente,
+                        acelera a cicatrização devido às suas propriedades antibacterianas, e para o
+                        fortalecimento do sistema imunológico sendo rico em enzimas e nutrientes que 
+                        ajudam na defesa contra doenças.
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
@@ -294,15 +290,13 @@ export default function Home() {
               <CardHeader className="p-0 mb-2 md:mb-4">
                 <CardTitle className="flex items-center text-lg md:text-xl font-bold text-[#f6a51e]">
                   <span className="w-2 h-2 md:w-3 md:h-3 bg-[#0B97E4] rounded-full mr-2 md:mr-3"></span>{" "}
-                  Fauna
+                  Energia e Nutrição
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <p className="text-sm md:text-base text-[#742406] mb-2 md:mb-4 flex-grow">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took ...
+                  Por ser rico em açúcares naturais, é ideal para atletas ou pessoas
+                  que precisam de energia imediata...
                 </p>
                 <Dialog>
                   <DialogTrigger className="text-[#f6a51e] hover:underline p-0 pb-2 text-sm md:text-base">
@@ -311,12 +305,12 @@ export default function Home() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle className="text-[#742406]">
-                        A Fauna e a Apicultura em Moreilandia
+                        Energia para seu corpo, nutrição para sua saúde
                       </DialogTitle>
                       <DialogDescription className="text-[#742406]">
-                        Informações expandidas sobre a fauna local e seu papel
-                        no ecossistema da apicultura em Moreilandia. A
-                        importância das abelhas e outros polinizadores.
+                        Com uma fonte de energia rápida é rico em açúcares naturais e ideal para atletas ou pessoas que precisam de 
+                        energia imediata, também com seus nutrientes essenciais lele contém vitaminas, minerais e 
+                        aminoácidos que contribuem para uma dieta equilibrada.
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
