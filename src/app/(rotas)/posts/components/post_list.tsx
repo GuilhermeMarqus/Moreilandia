@@ -47,7 +47,7 @@ const PostList = () => {
   return (
     <div className="grid grid-cols-1 gap-8 justify-items-center mb-10">
       {posts.map((post) => (
-        <div key={post.id} className="bg-white rounded-lg border border-[#FACA7A] overflow-hidden max-w-sm w-full">
+        <div key={post.id} className="bg-white rounded-lg border border-[#FACA7A] overflow-hidden max-w-xl w-full">
           <img
             src={`https://extensao-8-semestre-si-2025-2.onrender.com/uploads/${post.banner}`}
             alt={post.titulo}
