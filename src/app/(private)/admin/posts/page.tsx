@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Search, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios"; // Importar axios
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface PostData {
   id: number;
@@ -25,6 +33,9 @@ export default function PostsPage() {
   const [posts, setPosts] = useState<PostData[]>([]); // Estado para armazenar os posts
   const [loading, setLoading] = useState(true); // Estado de carregamento
   const [error, setError] = useState<string | null>(null); // Estado para erros
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // Estado do diálogo de confirmação
+  const [postToDelete, setPostToDelete] = useState<PostData | null>(null); // Post a ser deletado
+  const [deleting, setDeleting] = useState(false); // Estado de carregamento da exclusão
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -58,6 +69,45 @@ export default function PostsPage() {
 
     fetchPosts();
   }, []);
+
+  const handleDeleteClick = (post: PostData) => {
+    setPostToDelete(post);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!postToDelete) return;
+
+    setDeleting(true);
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Token de autenticação não encontrado.");
+      setDeleting(false);
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `https://extensao-8-semestre-si-2025-2.onrender.com/api/admin/postagem/${postToDelete.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Remove o post da lista
+      setPosts(posts.filter((p) => p.id !== postToDelete.id));
+      setDeleteDialogOpen(false);
+      setPostToDelete(null);
+    } catch (err) {
+      console.error("Erro ao deletar post:", err);
+      alert("Erro ao deletar o post. Tente novamente.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const filteredPosts = posts.filter((post) =>
     post.titulo.toLowerCase().includes(search.toLowerCase())
@@ -116,7 +166,9 @@ export default function PostsPage() {
               <Link href={`/admin/posts/${post.id}`}>
                 <Pencil className="w-5 h-5 text-gray-700 hover:text-yellow-600 cursor-pointer" />
               </Link>
-              <Trash2 className="w-5 h-5 text-gray-700 hover:text-red-600 cursor-pointer" />
+              <button onClick={() => handleDeleteClick(post)} className="hover:text-red-600">
+                <Trash2 className="w-5 h-5 text-gray-700 hover:text-red-600 cursor-pointer" />
+              </button>
             </div>
           </div>
         ))}
@@ -126,16 +178,34 @@ export default function PostsPage() {
       <div className="flex justify-center mt-10 space-x-4">
         <Button variant="outline" onClick={() => router.push(`/admin/posts/cadastrarpost`)}>Cadastrar</Button>
       </div>
-       <style>{`
-        /* Oculta a Navbar */
-        .fixed {
-          display: none !important;
-        }
-        /* Oculta o Footer */
-        footer {
-          display: none !important;
-        }
-      `}</style>
+
+      {/* Diálogo de confirmação de exclusão */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar exclusão</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja deletar o post "{postToDelete?.titulo}"? Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-3 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={deleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+            >
+              {deleting ? "Deletando..." : "Deletar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
