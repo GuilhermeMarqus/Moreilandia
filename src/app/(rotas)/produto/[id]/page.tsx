@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Link from 'next/link';
 
 interface Product {
   id: number;
@@ -17,8 +18,24 @@ interface Product {
   updatedAt: string;
 }
 
+interface Produtor {
+  id: number;
+  userId: string;
+  biografia: string;
+  contato_whatsapp: string;
+  contato_email: string;
+  foto_perfil: string;
+  createdAt: string;
+  updatedAt: string;
+  usuario?: {
+    nome: string;
+    email: string;
+  };
+}
+
 export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
+  const [produtor, setProdutor] = useState<Produtor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -50,6 +67,16 @@ export default function ProductDetail() {
         }
 
         setProduct(foundProduct);
+
+        // Buscar o produtor que cadastrou o produto
+        try {
+          const produtorResponse = await axios.get(
+            `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor/${foundProduct.produtorId}`
+          );
+          setProdutor(produtorResponse.data);
+        } catch (produtorErr) {
+          console.error('Erro ao buscar dados do produtor:', produtorErr);
+        }
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -145,6 +172,85 @@ export default function ProductDetail() {
           </Button>
         </div>
       </div>
+
+      {/* Seção do Produtor */}
+      {produtor && (
+        <div className="mt-16 pt-12 border-t-2">
+          <h2 className="text-3xl font-bold mb-8 text-center">Produtor</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Foto e Info do Produtor */}
+            <div className="flex flex-col items-center md:col-span-1">
+              <div className="relative w-40 h-40 mb-6">
+                {produtor.foto_perfil ? (
+                  <Image
+                    src={`https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${produtor.foto_perfil}`}
+                    alt={produtor.usuario?.nome || 'Produtor'}
+                    fill
+                    className="object-cover rounded-full shadow-lg"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center">
+                    <span className="text-gray-500">Sem foto</span>
+                  </div>
+                )}
+              </div>
+              <h3 className="text-xl font-bold text-center">
+                {produtor.usuario?.nome || 'Produtor'}
+              </h3>
+              <p className="text-gray-600 text-sm text-center mt-1">
+                Moreilândia - Pernambuco
+              </p>
+            </div>
+
+            {/* Descrição */}
+            <div className="md:col-span-1">
+              <h4 className="font-semibold mb-2">Sobre</h4>
+              <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                {produtor.biografia || 'Sem descrição disponível'}
+              </p>
+              <div className="space-y-1 text-sm text-gray-600">
+                <p>
+                  <span className="font-semibold">Produtos:</span> 1
+                </p>
+                <p>
+                  <span className="font-semibold">Membro desde:</span> {new Date(produtor.createdAt).getFullYear()}
+                </p>
+              </div>
+            </div>
+
+            {/* Contatos */}
+            <div className="md:col-span-1">
+              <h4 className="text-xl font-bold mb-4">Contatos</h4>
+              <div className="space-y-3">
+                {produtor.contato_whatsapp && (
+                  <div className="flex items-center">
+                    <span className="text-gray-700 break-all">
+                      {produtor.contato_whatsapp}
+                    </span>
+                  </div>
+                )}
+                {produtor.contato_email && (
+                  <div className="flex items-center">
+                    <span className="text-gray-700 break-all">
+                      {produtor.contato_email}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <Link href={`/produtores/${produtor.id}`}>
+                <Button 
+                  variant="outline" 
+                  className="mt-6 w-full text-blue-500 border-blue-500 hover:bg-blue-50"
+                >
+                  Ver mais
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
