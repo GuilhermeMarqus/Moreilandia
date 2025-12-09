@@ -36,7 +36,7 @@ export default function CadastrarProdutoPage() {
   };
 
   const handleSalvar = async () => {
-    const token = localStorage.getItem('moreilandia.token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       alert("Você presa estar logado para criar um produto");

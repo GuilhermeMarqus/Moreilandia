@@ -33,7 +33,7 @@ export default function ProdutorPage() {
     const fetchProdutos = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('moreilandia.token');
+      const token = localStorage.getItem('token');
 
       if (!token) {
         setError("Token de autenticação não encontrado. Faça login novamente.");

@@ -30,7 +30,7 @@ export default function PostsPage() {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("moreilandia.token");
+      const token = localStorage.getItem("token");
 
       if (!token) {
         setError("Token de autenticação não encontrado.");

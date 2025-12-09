@@ -50,7 +50,7 @@ export default function CadastrarProdutoPage() {
       formData.append("titulo", produto.titulo);
       formData.append("conteudo", produto.conteudo);
       
-      const token = localStorage.getItem("moreilandia.token"); // Obter o token
+      const token = localStorage.getItem("token"); // Obter o token
       if (!token) {
         alert("Token de autenticação não encontrado. Faça login novamente.");
         setCarregando(false);

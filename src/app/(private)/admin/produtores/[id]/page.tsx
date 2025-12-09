@@ -37,7 +37,7 @@ export default function ProdutorPage() {
   useEffect(() => {
     const fetchProdutor = async () => {
       try {
-        const token = localStorage.getItem("moreilandia.token");
+        const token = localStorage.getItem("token");
         if (!token) {
           throw new Error("Token de autenticação não encontrado.");
         }

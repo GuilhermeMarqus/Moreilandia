@@ -52,7 +52,7 @@ export default function CadastrarProdutorPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       setLoadingUsers(true);
-      const token = localStorage.getItem("moreilandia.token");
+      const token = localStorage.getItem("token");
       if (!token) {
         console.error("Token de autenticação não encontrado.");
         setLoadingUsers(false);
@@ -100,7 +100,7 @@ export default function CadastrarProdutorPage() {
   };
 
   const handleSalvar = async () => {
-    const token = localStorage.getItem("moreilandia.token");
+    const token = localStorage.getItem("token");
 
     if (!token) {
       alert("Você precisa estar logado para cadastrar um produtor");
