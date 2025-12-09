@@ -17,7 +17,6 @@ interface Produtor {
   userId: number;
   createdAt: string;
   updatedAt: string;
-  foto_perfil_url: string;
 }
 
 interface Product {
@@ -87,7 +86,7 @@ export default function ProdutorPage() {
       <div className="w-full h-full flex max-md:flex-col md:flex-row items-center gap-4 text-center">
         <div className="flex flex-col items-center w-full">
           <Image
-            src={produtor.foto_perfil_url}
+            src={produtor.foto_perfil ? `https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${produtor.foto_perfil}` : '/placeholder.jpg'}
             alt={produtor.nome}
             width={250}
             height={250}
@@ -126,7 +125,7 @@ export default function ProdutorPage() {
               <ProductCard
                 id={product.id}
                 key={product.id}
-                imageSrc={`https://extensao-8-semestre-si-2025-2.onrender.com/files/${product.foto_produto}`}
+                imageSrc={`https://extensao-8-semestre-si-2025-2.onrender.com/api/files/${product.foto_produto}`}
                 title={product.nome}
                 description={product.descricao}
                 created={product.createdAt}
