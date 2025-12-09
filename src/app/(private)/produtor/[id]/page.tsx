@@ -168,7 +168,7 @@ export default function ProdutoPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="mt-6">
-            <h2 className="text-xl font-bold mb-2">descição</h2>
+            <h2 className="text-xl font-bold mb-2">Descrição</h2>
             {isEditing ? (
               <textarea
                 name="description"
