@@ -134,7 +134,7 @@ export default function CadastrarProdutorPage() {
 
     try {
       const response = await axios.post(
-        `https://extensao-8-semestre-si-2025-2.onrender.com/api/usuario/${produtor.userId}/produtor`,
+        `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor`,
         formData,
         {
           headers: {

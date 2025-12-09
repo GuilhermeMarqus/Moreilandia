@@ -67,7 +67,6 @@ export default function CadastrarProdutoPage() {
         setCarregando(false);
         return;
       }
-      formData.append("autorId", String(autorId)); // Anexar o ID do autor como string
 
       if (produto.bannerFile) {
         formData.append("banner", produto.bannerFile);
