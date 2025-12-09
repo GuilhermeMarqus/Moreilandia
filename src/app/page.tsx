@@ -144,25 +144,25 @@ export default function Home() {
         </div>
         <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-40 pt-6 md:pt-35">
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"🌱 Dimensão Econômica"}
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "A produção de mel em Moreilândia, Pernambuco, tornou-se uma atividade estratégica para o desenvolvimento local. A apicultura, além de exigir baixo investimento inicial..."
             }
             titleColor="#fafbfb"
             descriptionColor="#742406"
           />
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"👥 Dimensão Socia"}
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "A cultura do mel em Moreilândia não se limita ao aspecto econômico: ela também fortalece os laços comunitários. A apicultura é vista como uma prática que promove cooperação entre famílias e associações locais..."
             }
             titleColor="#fafbfb"
             descriptionColor="#742406"
           />
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"🌍 Dimensão Ambiental"}
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "O mel de Moreilândia é fruto de uma prática que alia produção e preservação ambiental. A apicultura contribui para a polinização das plantas nativas, fortalecendo a biodiversidade e garantindo equilíbrio ecológico..."
             }
             titleColor="#fafbfb"
             descriptionColor="#742406"
