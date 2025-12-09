@@ -31,9 +31,9 @@ export default function Navbar() {
               História
             </Link>
             <Link
-              href="/#beneficios"
+              href="./posts"
               className="hover:text-amber-600 transition"
-              onClick={() => router.push("./beneficios")}
+              onClick={() => router.push("./posts")}
             >
               Postagens
             </Link>

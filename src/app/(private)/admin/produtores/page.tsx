@@ -6,51 +6,76 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-const adminProdutores = [
-  {
-    id: 1,
-    nome: "Francisco Ferreira Filho Florêncio",
-    cidade: "Moreilândia",
-    estado: "Pernambuco",
-    produtos: 1,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/Produtor 1.svg", // adicione a imagem em public/images
-  },
-  {
-    id: 2,
-    nome: "João Silva",
-    cidade: "Juazeiro do Norte",
-    estado: "Ceará",
-    produtos: 0,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/UserIcon.svg",
-  },
-  {
-    id: 3,
-    nome: "Maria Pereira",
-    cidade: "Cajazeiras",
-    estado: "Pernambuco",
-    produtos: 3,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/UserIcon.svg",
-  },
-];
+import { useState, useEffect } from "react"; // Adicionar useEffect
+import Image from "next/image"; // Importar Image
+import ProdutorCardItem from "./components/produtor-card-item"; // Importar o novo componente
+import { ProdutorData } from "./components/produtor-card-item"; // Importar a interface ProdutorData
 
 export default function ProdutoresPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [produtores, setProdutores] = useState<ProdutorData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredProdutores = adminProdutores.filter((produtores) =>
-    produtores.nome.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    const fetchProdutores = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Usuário não autenticado. Faça login novamente.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(
+          "https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor", // Endpoint para listar usuários/produtores
+          {
+            method: 'GET', // Correção da sintaxe do método
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Falha ao buscar produtores.");
+        }
+
+        const data: ProdutorData[] = await response.json();
+        console.log("Dados dos produtores recebidos da API:", data); // Adicionado para depuração
+        // Não é mais necessário filtrar por papel, pois este endpoint retorna apenas produtores
+        setProdutores(data);
+      } catch (err: any) {
+        setError(err.message || "Erro desconhecido ao buscar produtores.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProdutores();
+  }, []);
+
+  const filteredProdutores = produtores.filter((produtor) =>
+    produtor.nome.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="flex-1 p-8 bg-gray-100 min-h-screen flex items-center justify-center">
+        <p>Carregando produtores...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 p-8 bg-gray-100 min-h-screen flex items-center justify-center text-red-600">
+        <p>Erro: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-8 bg-gray-100 min-h-screen">
@@ -67,37 +92,8 @@ export default function ProdutoresPage() {
       </div>
 
       <div className="space-y-4">
-        {filteredProdutores.map((produtores) => (
-          <Card key={produtores.id} className="mb-6">
-            <CardHeader>
-              <div className="grid grid-cols-3 gap-4 font-semibold text-gray-700">
-                <div>Nome</div>
-                <div>ID</div>
-                <div></div> {/* Ação */}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4 items-center py-2 px-4 rounded-md bg-gray-100 mb-2">
-                <div>{produtores.nome}</div>
-                <div>{produtores.id}</div>
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="cursor-pointer"
-                    onClick={() =>
-                      router.push(`/admin/produtores/${produtores.id}`)
-                    }
-                  >
-                    <PenLine className="h-4 w-4 cursor-pointer" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {filteredProdutores.map((produtor) => (
+          <ProdutorCardItem key={produtor.id} produtor={produtor} />
         ))}
       </div>
 

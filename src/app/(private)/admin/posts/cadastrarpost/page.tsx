@@ -4,12 +4,15 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, CheckCircle2 } from "lucide-react";
+import axios from "axios"; // Importar axios
+import { jwtDecode } from "jwt-decode"; // Importar jwtDecode
 
 export default function CadastrarProdutoPage() {
   const [produto, setProduto] = useState({
-    nome: "",
-    descricao: "",
-    imagem: "",
+    titulo: "", // Alterado de 'nome' para 'titulo'
+    conteudo: "", // Alterado de 'descricao' para 'conteudo'
+    imagem: "", // Para pré-visualização da imagem
+    bannerFile: null as File | null, // Para o arquivo real do banner
   });
   const [salvo, setSalvo] = useState(false);
   const [carregando, setCarregando] = useState(false);
@@ -26,7 +29,7 @@ export default function CadastrarProdutoPage() {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProduto({ ...produto, imagem: imageUrl });
+      setProduto({ ...produto, imagem: imageUrl, bannerFile: file });
       setSalvo(false);
     }
   };
@@ -36,42 +39,62 @@ export default function CadastrarProdutoPage() {
   };
 
   const handleSalvar = async () => {
-    if (!produto.nome || !produto.descricao) {
-      alert("Preencha todos os campos antes de salvar.");
+    if (!produto.titulo || !produto.conteudo || !produto.bannerFile) {
+      alert("Preencha todos os campos e selecione um banner antes de salvar.");
       return;
     }
 
     setCarregando(true);
     try {
-      const response = await fetch(
+      const formData = new FormData();
+      formData.append("titulo", produto.titulo);
+      formData.append("conteudo", produto.conteudo);
+      
+      const token = localStorage.getItem("moreilandia.token"); // Obter o token
+      if (!token) {
+        alert("Token de autenticação não encontrado. Faça login novamente.");
+        setCarregando(false);
+        return;
+      }
+
+      let autorId: string // Valor padrão caso não encontre no token
+      try {
+        const decodedToken: any = jwtDecode(token);
+        autorId = decodedToken.id; // Supondo que o ID do usuário está no campo 'id' do token
+      } catch (decodeError) {
+        console.error("Erro ao decodificar o token JWT:", decodeError);
+        alert("Erro ao decodificar o token. Tente fazer login novamente.");
+        setCarregando(false);
+        return;
+      }
+
+      if (produto.bannerFile) {
+        formData.append("banner", produto.bannerFile);
+      }
+
+      const response = await axios.post(
         "https://extensao-8-semestre-si-2025-2.onrender.com/api/admin/postagem",
+        formData,
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            // Se o endpoint for protegido, adicione o token aqui:
-            // "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data', // Axios define isso automaticamente
           },
-          body: JSON.stringify({
-            titulo: produto.nome,
-            conteudo: produto.descricao,
-            autorId: 1, // <-- coloque o ID real do autor aqui, se tiver autenticação
-          }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Erro ao criar post: ${response.statusText}`);
-      }
-
-      const data = await response.json();
+      const data = response.data;
       console.log("Post criado:", data);
 
       setSalvo(true);
-      setProduto({ nome: "", descricao: "", imagem: "" });
+      setProduto({ titulo: "", conteudo: "", imagem: "", bannerFile: null });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""; // Limpar o input de arquivo
+      }
       setTimeout(() => setSalvo(false), 3000);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Erro ao salvar o post:", error);
+      console.error("Detalhes do erro:", error.response?.data); // Log detalhado do erro
       alert("Erro ao salvar o post. Veja o console para mais detalhes.");
     } finally {
       setCarregando(false);
@@ -79,8 +102,11 @@ export default function CadastrarProdutoPage() {
   };
 
   const handleDescartar = () => {
-    setProduto({ nome: "", descricao: "", imagem: "" });
+    setProduto({ titulo: "", conteudo: "", imagem: "", bannerFile: null });
     setSalvo(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Limpar o input de arquivo
+    }
   };
 
   return (
@@ -89,13 +115,13 @@ export default function CadastrarProdutoPage() {
         <h1 className="text-2xl font-semibold mb-6">Cadastrar post</h1>
 
         <div className="bg-gray-200 rounded-xl p-6 space-y-6">
-          {/* Nome */}
+          {/* Título */}
           <div>
             <label className="block text-sm font-medium mb-2">Título</label>
             <input
               type="text"
-              name="nome"
-              value={produto.nome}
+              name="titulo"
+              value={produto.titulo}
               onChange={handleChange}
               placeholder="Digite o título do post"
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -104,7 +130,7 @@ export default function CadastrarProdutoPage() {
 
           {/* Imagem */}
           <div>
-            <label className="block text-sm font-medium mb-2">Imagem</label>
+            <label className="block text-sm font-medium mb-2">Banner</label>
             <div className="flex items-center space-x-4">
               <div
                 onClick={handleImageClick}
@@ -113,7 +139,7 @@ export default function CadastrarProdutoPage() {
                 {produto.imagem ? (
                   <Image
                     src={produto.imagem}
-                    alt="Imagem do post"
+                    alt="Imagem do banner"
                     fill
                     className="object-cover rounded-xl"
                   />
@@ -134,14 +160,14 @@ export default function CadastrarProdutoPage() {
             </div>
           </div>
 
-          {/* Descrição */}
+          {/* Conteúdo */}
           <div>
             <label className="block text-sm font-medium mb-2">
               Conteúdo do post
             </label>
             <textarea
-              name="descricao"
-              value={produto.descricao}
+              name="conteudo"
+              value={produto.conteudo}
               onChange={handleChange}
               placeholder="Digite o conteúdo..."
               className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
