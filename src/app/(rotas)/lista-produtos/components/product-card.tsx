@@ -2,23 +2,24 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react"; // Importe o ícone do WhatsApp ou similar
 import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
+  id: number;
   imageSrc?: string;
   title: string;
   description: string;
-  status?: string;
+  created?: string;
 }
 
 //colocar para ser puxado por ID
 
 export default function ProductCard({
+  id,
   imageSrc,
   title,
   description,
-  status,
+  created,
 }: ProductCardProps) {
 
 const router = useRouter();
@@ -40,14 +41,14 @@ const router = useRouter();
       </div>
       <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
       <p className="text-gray-600 text-sm mb-4 flex-grow text-wrap">{description}</p>
-      {status && (
+      {created && (
         <p className="text-gray-500 text-xs mb-4">
-          Usado - <span className="font-semibold">{status}</span>
+          Publicado em - <span className="font-semibold">{new Date(created).toLocaleDateString()} {new Date(created).toLocaleTimeString()}</span>
         </p>
       )}
       <div className="flex items-center justify-center gap-2 mt-auto">
         <Button className="bg-[#f6a51e] hover:bg-[#a36600] text-white px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-300"
-         onClick={() => router.push("/produto")}>
+         onClick={() => router.push(`/produto/${id}`)}>
           Mais informações
         </Button>
         <a

@@ -2,114 +2,114 @@
 
 import Image from "next/image";
 import { PenLine, Trash2 } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound, useParams } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
 
-const adminProdutores = [
-  {
-    id: 1,
-    nome: "Francisco Ferreira Filho Florêncio",
-    cidade: "Moreilândia",
-    estado: "Pernambuco",
-    produtos: 1,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/Produtor 1.svg",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    products: [
-      {
-        imageSrc: "/foto-produto.svg",
-        title: "Cilindro alveolador doméstico",
-        description:
-          "Cilindro alveolador de cera de abelhas manual doméstico em resina de poliéster (a mesma usada na fabricação de lanchas) com alta resistência.",
-        status: "Estado de novo",
-      },
-      {
-        imageSrc: "/placeholder-image.svg",
-        title: "Mel Puro",
-        description:
-          "Mel 100% puro e natural, colhido diretamente das melhores floradas. Sabor e qualidade incomparáveis.",
-        status: "Novo",
-      },
-    ],
-  },
-  {
-    id: 2,
-    nome: "João Silva",
-    cidade: "Juazeiro do Norte",
-    estado: "Ceará",
-    produtos: 0,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/images/default-user.png",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    products: [],
-  },
-  {
-    id: 3,
-    nome: "Maria Pereira",
-    cidade: "Cajazeiras",
-    estado: "Pernambuco",
-    produtos: 3,
-    membroDesde: 2025,
-    telefone: "87 9 9999-9999",
-    email: "produtor@email.com",
-    foto: "/images/default-user.png",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    products: [
-      {
-        imageSrc: "/foto-produto.svg",
-        title: "Cera de Abelha",
-        description:
-          "Cera de abelha pura, ideal para a fabricação de velas, cosméticos e uso apícola.",
-        status: "Novo",
-      },
-      {
-        imageSrc: "/placeholder-image.svg",
-        title: "Própolis Verde",
-        description:
-          "Extrato de própolis verde de alta qualidade, reconhecido por suas propriedades medicinais.",
-        status: "Novo",
-      },
-      {
-        imageSrc: "/foto-produto.svg",
-        title: "Geleia Real",
-        description:
-          "Geleia real fresca, um superalimento rico em nutrientes para a saúde e bem-estar.",
-        status: "Usado - Pouco uso",
-      },
-    ],
-  },
-];
+interface ProdutorData {
+  id?: string; // ID do produtor (opcional, gerado pelo backend)
+  nome: string;
+  endereco: string;
+  contato_whatsapp: string; // Alterado de 'telefone'
+  contato_email: string; // Alterado de 'email'
+  userId: string; // ID do ADMIN que está cadastrando
+  biografia: string;
+  foto_perfil_url?: string,
+  foto_perfil: string; // Alterado de 'imagem'
+}
 
-//alterar de produtores para produtor
+interface ProdutorCardItemProps {
+  produtor: ProdutorData;
+}
 
-export default function ProdutorPage({ params }: { params: { id: string } }) {
-  const produtores = adminProdutores.find((p) => p.id === Number(params.id));
-  if (!produtores) return notFound();
+export default function ProdutorPage() {
+  const routeParams = useParams();
+  const { id } = routeParams;
+
+  const [produtorData, setProdutorData] = useState<ProdutorData | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [produtor, setProdutor] = useState(produtores);
+
+  useEffect(() => {
+    const fetchProdutor = async () => {
+      try {
+        const token = localStorage.getItem("moreilandia.token");
+        if (!token) {
+          throw new Error("Token de autenticação não encontrado.");
+        }
+
+        console.log("ID do produtor recebido:", id);
+        console.log("Objeto routeParams completo:", routeParams);
+
+        const apiUrl = `https://extensao-8-semestre-si-2025-2.onrender.com/api/produtor/${id}`;
+        console.log("URL da API construída:", apiUrl);
+
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Erro ao buscar produtor: ${response.statusText}. ID usado: ${id}`
+          );
+        }
+
+        const data: ProdutorData = await response.json();
+        if (!data || Object.keys(data).length === 0 || !data.id) {
+          setProdutorData(null);
+        } else {
+          setProdutorData(data);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    if (id) {
+      console.log("Chamando fetchProdutor com ID:", id, "Tipo:", typeof id);
+      fetchProdutor();
+    }
+  }, [id]);
+
+  if (carregando) {
+    return <div className="flex-1 p-6 bg-gray-100">Carregando produtor...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 p-6 bg-gray-100 text-red-600">Erro: {error}</div>
+    );
+  }
+
+  if (!produtorData) {
+    return notFound();
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProdutor({ ...produtor, [e.target.name]: e.target.value });
+    setProdutorData({ ...produtorData, [e.target.name]: e.target.value });
   };
 
   const handleEditToggle = () => {
     if (isEditing) {
-      console.log("Salvando dados atualizados:", produtor);
+      console.log("Salvando dados atualizados:", produtorData);
+      // Aqui você enviaria os dados 'produtor' para a sua API de atualização.
+      // Ex: axios.put(`/api/produtores/${produtor.id}`, produtor);
     }
     setIsEditing(!isEditing);
   };
+
+  const [imageError, setImageError] = useState(false);
 
   return (
     <>
@@ -128,11 +128,12 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col items-center justify-center p-4">
               <Image
-                src="/Apicultor png.png" // Usando a imagem do apicultor
+                src={imageError ? "/UserIcon.svg" : encodeURI(produtorData.foto_perfil_url || "/UserIcon.svg")}
                 alt="Produtor"
                 width={150}
                 height={150}
                 className="rounded-full object-cover mb-4"
+                onError={() => setImageError(true)}
               />
             </div>
             <div>
@@ -142,21 +143,21 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
                   <>
                     <input
                       name="nome"
-                      value={produtor.nome}
+                      value={produtorData.nome}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full mb-2"
                     />
                     <input
-                      name="cidade"
-                      value={produtor.cidade}
+                      name="endereco"
+                      value={produtorData.endereco}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full"
                     />
                   </>
                 ) : (
                   <>
-                    <p>{produtor.nome}</p>
-                    <p>{produtor.cidade}</p>
+                    <p>{produtorData.nome}</p>
+                    <p>{produtorData.endereco}</p>
                   </>
                 )}
               </div>
@@ -165,28 +166,28 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
                 {isEditing ? (
                   <>
                     <input
-                      name="telefone"
-                      value={produtor.telefone}
+                      name="contato_whatsapp"
+                      value={produtorData.contato_whatsapp}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full mb-2"
                     />
                     <input
-                      name="email"
-                      value={produtor.email}
+                      name="contato_email"
+                      value={produtorData.contato_email}
                       onChange={handleChange}
                       className="border rounded-md p-2 w-full"
                     />
                   </>
                 ) : (
                   <>
-                    <p>{produtor.telefone}</p>
-                    <p>{produtor.email}</p>
+                    <p>{produtorData.contato_whatsapp}</p>
+                    <p>{produtorData.contato_email}</p>
                   </>
                 )}
               </div>
               <div className="mb-4">
                 <h2 className="text-xl font-bold">ID</h2>
-                <p>{produtores.id}</p>
+                <p>{produtorData.id}</p>
               </div>
             </div>
           </div>
@@ -194,14 +195,14 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
             <h2 className="text-xl font-bold mb-2">Biografia</h2>
             {isEditing ? (
               <textarea
-                name="description"
-                value={produtor.description}
+                name="biografia"
+                value={produtorData.biografia}
                 onChange={handleChange}
                 className="border rounded-md p-2 w-full"
                 rows={5}
               />
             ) : (
-              <p>{produtor.description}</p>
+              <p>{produtorData.biografia}</p>
             )}
           </div>
         </Card>
@@ -232,17 +233,6 @@ export default function ProdutorPage({ params }: { params: { id: string } }) {
           ))}
         </div>
       </div>
-
-      <style>{`
-        /* Oculta a Navbar */
-        .fixed {
-          display: none !important;
-        }
-        /* Oculta o Footer */
-        footer {
-          display: none !important;
-        }
-      `}</style>
     </>
   );
 }
