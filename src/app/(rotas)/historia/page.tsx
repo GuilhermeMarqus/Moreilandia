@@ -48,28 +48,31 @@ export default function Historia() {
           </Link>
         </div>
       </div>
-      <main id="cards-historia" className="mx-auto flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4 sm:p-30">
+      <main id="cards-historia" className="mx-auto flex items-center justify-center">
+        <div className="w-full h-auto min-lg:items-start min-lg:justify-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-4 sm:p-30">
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"🌱 Dimensão Econômica"}
+            imageSrc="/cardsHistoria/dimensao_economica.jpg"
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "A produção de mel em Moreilândia, Pernambuco, tornou-se uma atividade estratégica para o desenvolvimento local. A apicultura, além de exigir baixo investimento inicial, garante renda complementar às famílias rurais e fortalece o agronegócio regional. Os apicultores do município têm encontrado no mel uma alternativa lucrativa e sustentável, capaz de gerar empregos e movimentar a economia. Estudos apontam que a atividade contribui para a fixação das famílias no campo, reduzindo o êxodo rural e ampliando as oportunidades de negócios."
             }
             titleColor="#742406"
             descriptionColor="#742406"
           />
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"👥 Dimensão Social"}
+            imageSrc="/cardsHistoria/dimensao_social.jpg"
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "A cultura do mel em Moreilândia não se limita ao aspecto econômico: ela também fortalece os laços comunitários. A apicultura é vista como uma prática que promove cooperação entre famílias e associações locais, estimulando o capital social e a solidariedade. Muitos produtores se organizam em cooperativas, o que facilita o acesso a treinamentos, crédito e mercados consumidores. Essa união gera sentimento de pertencimento e valorização cultural, já que o mel é reconhecido como um produto identitário da região"
             }
             titleColor="#742406"
             descriptionColor="#742406"
           />
           <Cartao
-            title={"Lorem ips un dolor"}
+            title={"🌍 Dimensão Ambiental"}
+            imageSrc="/cardsHistoria/dimensao_ambiental.jpg"
             description={
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took ..."
+              "O mel de Moreilândia é fruto de uma prática que alia produção e preservação ambiental. A apicultura contribui para a polinização das plantas nativas, fortalecendo a biodiversidade e garantindo equilíbrio ecológico. Além disso, desperta a consciência ambiental entre os produtores, que passam a valorizar a conservação das áreas de caatinga e a importância das abelhas para o ecossistema. Apesar dos desafios relacionados à falta de apoio técnico e governamental, a atividade se destaca como um exemplo de produção sustentável, capaz de unir tradição, natureza e inovação."
             }
             titleColor="#742406"
             descriptionColor="#742406"
