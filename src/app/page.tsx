@@ -145,6 +145,7 @@ export default function Home() {
         <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-40 pt-6 md:pt-35">
           <Cartao
             title={"🌱 Dimensão Econômica"}
+            imageSrc="/cardsHistoria/dimensao_economica.jpg"
             description={
               "A produção de mel em Moreilândia, Pernambuco, tornou-se uma atividade estratégica para o desenvolvimento local. A apicultura, além de exigir baixo investimento inicial..."
             }
@@ -152,7 +153,8 @@ export default function Home() {
             descriptionColor="#742406"
           />
           <Cartao
-            title={"👥 Dimensão Socia"}
+            title={"👥 Dimensão Social"}
+            imageSrc="/cardsHistoria/dimensao_social.jpg"
             description={
               "A cultura do mel em Moreilândia não se limita ao aspecto econômico: ela também fortalece os laços comunitários. A apicultura é vista como uma prática que promove cooperação entre famílias e associações locais..."
             }
@@ -161,6 +163,7 @@ export default function Home() {
           />
           <Cartao
             title={"🌍 Dimensão Ambiental"}
+            imageSrc="/cardsHistoria/dimensao_ambiental.jpg"
             description={
               "O mel de Moreilândia é fruto de uma prática que alia produção e preservação ambiental. A apicultura contribui para a polinização das plantas nativas, fortalecendo a biodiversidade e garantindo equilíbrio ecológico..."
             }
